@@ -139,7 +139,7 @@ public class Seance {
     }
 
     @Override
-    public String toString() {
+    public String   toString() {
         return "Seance{" +
                 "id=" + id +
                 ", actual_date='" + actual_date + '\'' +

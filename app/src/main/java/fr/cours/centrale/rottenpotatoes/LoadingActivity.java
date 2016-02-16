@@ -29,10 +29,12 @@ public class LoadingActivity extends Activity {
     private String urlProchainement = "http://centrale.corellis.eu/prochainement.json";
     private String urlSeances = "http://centrale.corellis.eu/seances.json";
 
-    public String listFilmProchainementSerialized = null;
+    private String listFilmProchainementSerialized = null;
     private String listSeanceSerialized = null;
     private String listFilmsSerialized = null;
     private String listEventWrappedSerialized = null;
+
+    public static String filename = "rottenfile";
 
     public String TAGprochainement = "liste des prochains films";
     public String TAGfilm = "liste des films";
@@ -190,10 +192,11 @@ public class LoadingActivity extends Activity {
 
     private void showMainActivity(){
         Intent intent = new Intent(this,MainActivity.class);
-        intent.putExtra(TAGprochainement, listFilmProchainementSerialized);
+/*        intent.putExtra(TAGprochainement, listFilmProchainementSerialized);
         intent.putExtra(TAGseance, listSeanceSerialized);
         intent.putExtra(TAGevent, listEventWrappedSerialized);
-        intent.putExtra(TAGfilm, listFilmsSerialized);
+        intent.putExtra(TAGfilm, listFilmsSerialized);*/
+
         Log.d(TAG, "starting main");
         Log.d(TAG, listFilmsSerialized);
         startActivity(intent);
