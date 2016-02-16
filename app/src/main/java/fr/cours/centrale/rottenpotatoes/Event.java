@@ -21,7 +21,8 @@ public class Event {
     private String evenementtypeid;
     private List<Film> films;
 
-    public Event(String id, String titre, String soustitre, String affiche, String description, String vad_condition, String partenaire, String date_deb, String date_fin, String heure, String contact, String web_label, String evenementtypeid, List<Film> films) {
+    public Event(String id, String titre, String soustitre, String affiche, String description, String vad_condition, String partenaire, String date_deb, String date_fin,
+                 String heure, String contact, String web_label, String evenementtypeid, List<Film> films) {
         this.id = id;
         this.titre = titre;
         this.soustitre = soustitre;
@@ -148,6 +149,17 @@ public class Event {
 
     public void setFilms(List<Film> films) {
         this.films = films;
+    }
+
+    public String getFilmsIdAsString(){
+        String films="";
+        if(this.getFilms() != null) {
+            for (int i = 0; i < this.getFilms().size(); i++) {
+                films =films+String.valueOf(this.getFilms().get(i).getId())+ ", ";
+            }
+            films=films.substring(0,films.length()-2);
+        }
+        return films;
     }
 
     @Override

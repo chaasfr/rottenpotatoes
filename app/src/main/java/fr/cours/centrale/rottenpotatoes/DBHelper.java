@@ -8,7 +8,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 /**
  * Created by christian on 16/02/16.
@@ -44,6 +43,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String FILMS_COLUMN_IS_AVP="is_avp";
     public static final String FILMS_COLUMN_IS_ALAUNE="is_alaune";
     public static final String FILMS_COLUMN_IS_LASTWEEK="is_lastWeek";
+    public static final String FILMS_COLUMN_IS_PROCHAINEMENT="is_prochainement";
 
     public static final String SEANCES_TABLE_NAME="seances";
     public static final String SEANCES_COLUMN_ID="id";
@@ -78,15 +78,6 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENTS_COLUMN_TYPE_WRAPPED="type";
     public static final String EVENTS_COLUMN_TITRE_WRAPPED="titre_wrapped";
 
-    public static final String CONTACTS_TABLE_NAME = "contacts";
-    public static final String CONTACTS_COLUMN_ID = "id";
-    public static final String CONTACTS_COLUMN_NAME = "name";
-    public static final String CONTACTS_COLUMN_EMAIL = "email";
-    public static final String CONTACTS_COLUMN_STREET = "street";
-    public static final String CONTACTS_COLUMN_CITY = "place";
-    public static final String CONTACTS_COLUMN_PHONE = "phone";
-    private HashMap hp;
-
     public DBHelper(Context context)
     {
         super(context, DATABASE_NAME , null, 1);
@@ -94,7 +85,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        // TODO Auto-generated method stub
         db.execSQL(
                 "create table "+FILMS_TABLE_NAME+" (" +
                         FILMS_COLUMN_ID + " integer primary key, "+
@@ -124,6 +114,7 @@ public class DBHelper extends SQLiteOpenHelper {
                         FILMS_COLUMN_IS_AVP+ " boolean, "+
                         FILMS_COLUMN_IS_ALAUNE+ " boolean, "+
                         FILMS_COLUMN_IS_LASTWEEK+ " boolean, "+
+                        FILMS_COLUMN_IS_PROCHAINEMENT+ " boolean "+
                         ")"
         );
 
@@ -141,41 +132,124 @@ public class DBHelper extends SQLiteOpenHelper {
                         SEANCES_COLUMN_TITRE+ " text, "+
                         SEANCES_COLUMN_CATEGORIEID+ " integer, "+
                         SEANCES_COLUMN_PERFORMANCEID+ " integer, "+
-                        SEANCES_COLUMN_CINEMA_SALLE+ "text, "+
+                        SEANCES_COLUMN_CINEMA_SALLE+ " text "+
                         ")"
         );
 
         db.execSQL(
-                "create table "+EVENTS_TABLE_NAME+" (" +
-                        EVENTS_COLUMN_ID + " integer primary key, "+
-                        EVENTS_COLUMN_TITRE+ " text, "+
-                        EVENTS_COLUMN_SOUSTITRE+ " text, "+
-                        EVENTS_COLUMN_AFFICHE+ " text, "+
-                        EVENTS_COLUMN_DESCRIPTION+ " text, "+
-                        EVENTS_COLUMN_VAD_CONDITION+ " text, "+
-                        EVENTS_COLUMN_PARTENAIRE+ " text, "+
+                "create table " + EVENTS_TABLE_NAME + " (" +
+                        EVENTS_COLUMN_ID + " integer primary key, " +
+                        EVENTS_COLUMN_TITRE + " text, " +
+                        EVENTS_COLUMN_SOUSTITRE + " text, " +
+                        EVENTS_COLUMN_AFFICHE + " text, " +
+                        EVENTS_COLUMN_DESCRIPTION + " text, " +
+                        EVENTS_COLUMN_VAD_CONDITION + " text, " +
+                        EVENTS_COLUMN_PARTENAIRE + " text, " +
+                        EVENTS_COLUMN_DATE_DEB + " text, " +
+                        EVENTS_COLUMN_DATE_FIN + " text, " +
+                        EVENTS_COLUMN_HEURE + " text, " +
+                        EVENTS_COLUMN_CONTACT + " text, " +
+                        EVENTS_COLUMN_WEB_LABEL + " text, " +
+                        EVENTS_COLUMN_EVENEMENTTYPEID + " text, " +
+                        EVENTS_COLUMN_FILMS + " text, " +
+                        EVENTS_COLUMN_TYPE_WRAPPED + " text, " +
+                        EVENTS_COLUMN_TITRE_WRAPPED + " text " +
                         ")"
         );
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        // TODO Auto-generated method stub
-        db.execSQL("DROP TABLE IF EXISTS contacts");
+        db.execSQL("DROP TABLE IF EXISTS "+ FILMS_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+ SEANCES_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS "+ EVENTS_TABLE_NAME);
         onCreate(db);
     }
 
-    public boolean insertContact  (String name, String phone, String email, String street,String place)
-    {
+    public void insertFilm (int id, String titre, String titre_ori, String affiche, String web, int duree, String distributeur, String participants, String realisateur, String synopsis, int annee,
+                            String date_sortie, String info, boolean is_visible, boolean is_vente, int genreid, int categorieid, String genre, String categorie, String ReleaseNumber, String pays, String share_url,
+                            String medias, String videos, boolean is_avp, boolean is_alaune, boolean is_lastWeek, boolean is_prochainement){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("phone", phone);
-        contentValues.put("email", email);
-        contentValues.put("street", street);
-        contentValues.put("place", place);
-        db.insert("contacts", null, contentValues);
-        return true;
+        contentValues.put(FILMS_COLUMN_ID, id);
+        contentValues.put(FILMS_COLUMN_TITRE, titre);
+        contentValues.put(FILMS_COLUMN_TITRE_ORI, titre_ori);
+        contentValues.put(FILMS_COLUMN_AFFICHE, affiche);
+        contentValues.put(FILMS_COLUMN_WEB, web);
+        contentValues.put(FILMS_COLUMN_DUREE, duree);
+        contentValues.put(FILMS_COLUMN_DISTRIBUTEUR, distributeur);
+        contentValues.put(FILMS_COLUMN_PARTICIPANTS, participants);
+        contentValues.put(FILMS_COLUMN_REALISATEUR, realisateur);
+        contentValues.put(FILMS_COLUMN_SYNOPSIS, synopsis);
+        contentValues.put(FILMS_COLUMN_ANNEE, annee);
+        contentValues.put(FILMS_COLUMN_DATE_SORTIE, date_sortie);
+        contentValues.put(FILMS_COLUMN_INFO, info);
+        contentValues.put(FILMS_COLUMN_IS_VISIBLE, is_visible);
+        contentValues.put(FILMS_COLUMN_IS_VENTE, is_vente);
+        contentValues.put(FILMS_COLUMN_GENREID, genreid);
+        contentValues.put(FILMS_COLUMN_CATEGORIEID, categorieid);
+        contentValues.put(FILMS_COLUMN_GENRE, genre);
+        contentValues.put(FILMS_COLUMN_CATEGORIE, categorie);
+        contentValues.put(FILMS_COLUMN_RELEASENUMBER, ReleaseNumber);
+        contentValues.put(FILMS_COLUMN_PAYS, pays);
+        contentValues.put(FILMS_COLUMN_SHARE_URL,share_url);
+        contentValues.put(FILMS_COLUMN_MEDIAS,medias);
+        contentValues.put(FILMS_COLUMN_VIDEOS,videos);
+        contentValues.put(FILMS_COLUMN_IS_AVP,is_avp);
+        contentValues.put(FILMS_COLUMN_IS_ALAUNE,is_alaune);
+        contentValues.put(FILMS_COLUMN_IS_LASTWEEK,is_lastWeek);
+        contentValues.put(FILMS_COLUMN_IS_PROCHAINEMENT,is_prochainement);
+        db.insert(FILMS_TABLE_NAME, null, contentValues);
+    }
+
+    public void insertSeance(int id, String actual_date, String show_time, boolean is_troisd, boolean is_malentendant, boolean is_handicape, String nationality, int cinemaid,
+                             int filmid, String titre, int categorieid, int performanceid, String cinema_salle){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SEANCES_COLUMN_ID,id);
+        contentValues.put(SEANCES_COLUMN_ACTUAL_DATE,actual_date);
+        contentValues.put(SEANCES_COLUMN_SHOW_TIME,show_time);
+        contentValues.put(SEANCES_COLUMN_IS_TROISD,is_troisd);
+        contentValues.put(SEANCES_COLUMN_IS_MALENTENDANT,is_malentendant);
+        contentValues.put(SEANCES_COLUMN_IS_HANDICAPE,is_handicape);
+        contentValues.put(SEANCES_COLUMN_NATIONALITY,nationality);
+        contentValues.put(SEANCES_COLUMN_CINEMAID,cinemaid);
+        contentValues.put(SEANCES_COLUMN_FILMID,filmid);
+        contentValues.put(SEANCES_COLUMN_TITRE,titre);
+        contentValues.put(SEANCES_COLUMN_CATEGORIEID,categorieid);
+        contentValues.put(SEANCES_COLUMN_PERFORMANCEID,performanceid);
+        contentValues.put(SEANCES_COLUMN_CINEMA_SALLE,cinema_salle);
+        db.insert(SEANCES_TABLE_NAME,null,contentValues);
+    }
+
+    public void insertEvent(String id, String titre, String soustitre, String affiche, String description, String vad_condition, String partenaire, String date_deb, String date_fin,
+                            String heure, String contact, String web_label, String evenementtypeid, String films, String type_wrapped, String titre_wrapped){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(EVENTS_COLUMN_TITRE,titre);
+        contentValues.put(EVENTS_COLUMN_SOUSTITRE,soustitre);
+        contentValues.put(EVENTS_COLUMN_AFFICHE,affiche);
+        contentValues.put(EVENTS_COLUMN_DESCRIPTION,description);
+        contentValues.put(EVENTS_COLUMN_VAD_CONDITION,vad_condition);
+        contentValues.put(EVENTS_COLUMN_PARTENAIRE,partenaire);
+        contentValues.put(EVENTS_COLUMN_DATE_DEB,date_deb);
+        contentValues.put(EVENTS_COLUMN_DATE_FIN,date_fin);
+        contentValues.put(EVENTS_COLUMN_HEURE,heure);
+        contentValues.put(EVENTS_COLUMN_CONTACT,contact);
+        contentValues.put(EVENTS_COLUMN_WEB_LABEL,web_label);
+        contentValues.put(EVENTS_COLUMN_EVENEMENTTYPEID,evenementtypeid);
+        contentValues.put(EVENTS_COLUMN_FILMS,films);
+        contentValues.put(EVENTS_COLUMN_TYPE_WRAPPED,type_wrapped);
+        contentValues.put(EVENTS_COLUMN_TITRE_WRAPPED,titre_wrapped);
+        db.insert(EVENTS_TABLE_NAME,null,contentValues);
+    }
+
+    public void updateProchainement(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FILMS_COLUMN_IS_PROCHAINEMENT,true);
+        db.update(FILMS_TABLE_NAME, contentValues,FILMS_COLUMN_ID+"="+id,null);
+
     }
 
     public Cursor getData(int id){
@@ -184,44 +258,47 @@ public class DBHelper extends SQLiteOpenHelper {
         return res;
     }
 
-    public int numberOfRows(){
+    public boolean checkIsFilmAlreadyInDb(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
-        int numRows = (int) DatabaseUtils.queryNumEntries(db, CONTACTS_TABLE_NAME);
-        return numRows;
-    }
-
-    public boolean updateContact (Integer id, String name, String phone, String email, String street,String place)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues contentValues = new ContentValues();
-        contentValues.put("name", name);
-        contentValues.put("phone", phone);
-        contentValues.put("email", email);
-        contentValues.put("street", street);
-        contentValues.put("place", place);
-        db.update("contacts", contentValues, "id = ? ", new String[] { Integer.toString(id) } );
+        String Query = "Select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_ID + " = " + id;
+        Cursor cursor = db.rawQuery(Query, null);
+        if(cursor.getCount() <= 0){
+            cursor.close();
+            return false;
+        }
+        cursor.close();
         return true;
     }
 
-    public Integer deleteContact (Integer id)
-    {
-        SQLiteDatabase db = this.getWritableDatabase();
-        return db.delete("contacts",
-                "id = ? ",
-                new String[] { Integer.toString(id) });
+    public int numberOfSeances(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, SEANCES_TABLE_NAME);
+        return numRows;
     }
 
-    public ArrayList<String> getAllCotacts()
+    public int numberOfEvents(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, EVENTS_TABLE_NAME);
+        return numRows;
+    }
+
+    public int numberOfFilms(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        int numRows = (int) DatabaseUtils.queryNumEntries(db, FILMS_TABLE_NAME);
+        return numRows;
+    }
+
+    public ArrayList<String> getAllseances()
     {
         ArrayList<String> array_list = new ArrayList<String>();
 
         //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from contacts", null );
+        Cursor res =  db.rawQuery( "select * from seances", null );
         res.moveToFirst();
 
         while(res.isAfterLast() == false){
-            array_list.add(res.getString(res.getColumnIndex(CONTACTS_COLUMN_NAME)));
+            array_list.add(res.getString(res.getColumnIndex(SEANCES_COLUMN_TITRE)));
             res.moveToNext();
         }
         return array_list;

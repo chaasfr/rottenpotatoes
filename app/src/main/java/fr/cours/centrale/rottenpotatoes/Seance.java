@@ -7,9 +7,9 @@ public class Seance {
     private int id;
     private String actual_date;
     private String show_time;
-    private Boolean is_troisd;
-    private Boolean is_malentendant;
-    private Boolean is_handicape;
+    private boolean is_troisd;
+    private boolean is_malentendant;
+    private boolean is_handicape;
     private String nationality;
     private int cinemaid;
     private int filmid;
@@ -18,7 +18,8 @@ public class Seance {
     private int performanceid;
     private String cinema_salle;
 
-    public Seance(int id, String actual_date, String show_time, Boolean is_troisd, Boolean is_malentendant, Boolean is_handicape, String nationality, int cinemaid, int filmid, String titre, int categorieid, int performanceid, String cinema_salle) {
+    public Seance(int id, String actual_date, String show_time, boolean is_troisd, boolean is_malentendant, boolean is_handicape, String nationality, int cinemaid,
+                  int filmid, String titre, int categorieid, int performanceid, String cinema_salle) {
         this.id = id;
         this.actual_date = actual_date;
         this.show_time = show_time;
@@ -58,27 +59,27 @@ public class Seance {
         this.show_time = show_time;
     }
 
-    public Boolean getIs_troisd() {
+    public boolean getIs_troisd() {
         return is_troisd;
     }
 
-    public void setIs_troisd(Boolean is_troisd) {
+    public void setIs_troisd(boolean is_troisd) {
         this.is_troisd = is_troisd;
     }
 
-    public Boolean getIs_malentendant() {
+    public boolean getIs_malentendant() {
         return is_malentendant;
     }
 
-    public void setIs_malentendant(Boolean is_malentendant) {
+    public void setIs_malentendant(boolean is_malentendant) {
         this.is_malentendant = is_malentendant;
     }
 
-    public Boolean getIs_handicape() {
+    public boolean getIs_handicape() {
         return is_handicape;
     }
 
-    public void setIs_handicape(Boolean is_handicape) {
+    public void setIs_handicape(boolean is_handicape) {
         this.is_handicape = is_handicape;
     }
 

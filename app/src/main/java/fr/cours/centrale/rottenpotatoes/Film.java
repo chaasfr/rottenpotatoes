@@ -69,8 +69,17 @@ public class Film {
     public int getId(){
         return this.id;
     }
+
     public void setId(int id){
         this.id = id;
+    }
+
+    public String getTitre() {
+        return titre;
+    }
+
+    public void setTitre(String titre) {
+        this.titre = titre;
     }
 
     public String getTitre_ori() {
@@ -265,12 +274,34 @@ public class Film {
         this.is_lastWeek = is_lastWeek;
     }
 
-    public void setTitre(String titre) {
-        this.titre = titre;
-    }
-
     public List<Medias> getMedias() {
         return medias;
+    }
+
+    public String getMediasAsString(){
+        String media="";
+        if(this.getMedias() != null) {
+            for (int i = 0; i < this.getMedias().size(); i++) {
+                media =media+this.getMedias().get(i).getPath()+ ", ";
+            }
+            media=media.substring(0,media.length()-2);
+        }
+        return media;
+    }
+
+    public String getVideosAsString(){
+        String videos;
+        if(this.getVideos() != null){
+            videos="{";
+            for (int i = 0; i < this.getVideos().size(); i++) {
+                Videos video= this.getVideos().get(i);
+                videos = videos + "\"titre\" : \""+video.getTitre()+"\", \"type\" : \""+video.getType()+"\", \"url\" : \""+video.getUrl()+"\"}, {";
+            }
+            videos=videos.substring(0,videos.length()-2);
+        }
+        else videos="";
+        return videos;
+
     }
 
     public void setMedias(List<Medias> medias) {
