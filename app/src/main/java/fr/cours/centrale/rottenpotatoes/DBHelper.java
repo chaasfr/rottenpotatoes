@@ -6,7 +6,6 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -384,7 +383,6 @@ public class DBHelper extends SQLiteOpenHelper {
         JsonParser parser = new JsonParser();
         ArrayList<Film.Videos> listVideos = new ArrayList<Film.Videos>();
         if(videoStringified.length()>10) {
-            Log.d(TAG, videoStringified );
             JsonArray jArray = parser.parse(videoStringified).getAsJsonArray();
             for(JsonElement obj : jArray ) {
                 Film.Videos video = gson.fromJson( obj , Film.Videos.class);
