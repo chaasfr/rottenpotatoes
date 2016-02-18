@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
+import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.film.Film;
 
 /**
@@ -26,6 +27,7 @@ import fr.cours.centrale.rottenpotatoes.film.Film;
  */
 public class DBHelper extends SQLiteOpenHelper {
     private static String TAG = DBHelper.class.getSimpleName();
+    private static DBHelper mInstance = null;
 
     public static final String DATABASE_NAME = "RottenPotatoes.db";
 
@@ -91,6 +93,17 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String EVENTS_COLUMN_FILMS="films";
     public static final String EVENTS_COLUMN_TYPE_WRAPPED="type";
     public static final String EVENTS_COLUMN_TITRE_WRAPPED="titre_wrapped";
+
+    public static DBHelper getInstance(Context ctx) {
+
+        // Use the application context, which will ensure that you
+        // don't accidentally leak an Activity's context.
+        // See this article for more information: http://bit.ly/6LRzfx
+        if (mInstance == null) {
+            mInstance = new DBHelper(ctx.getApplicationContext());
+        }
+        return mInstance;
+    }
 
     public DBHelper(Context context)
     {
@@ -317,13 +330,9 @@ public class DBHelper extends SQLiteOpenHelper {
         return array_list;
     }
 
-    public ArrayList<Film> getAllFilm(){
-        ArrayList<Film> listFilm = new ArrayList<Film>();
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from "+FILMS_TABLE_NAME, null );
+    public List<Film> cursorToFilm(Cursor res){
+        List<Film> listFilm = new ArrayList<Film>();
         res.moveToFirst();
-
         while(res.isAfterLast() == false){
 
             String paths = res.getString(res.getColumnIndex(FILMS_COLUMN_MEDIAS));
@@ -363,7 +372,60 @@ public class DBHelper extends SQLiteOpenHelper {
             listFilm.add(film);
             res.moveToNext();
         }
+        return listFilm;
+    }
+
+    public Film getFilmById(int Id){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_ID + "=" + Id + "", null);
+        Film film = cursorToFilm(res).get(0);
+        return film;
+    }
+
+    public List<Film> getAllFilm(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME, null);
+
+        List<Film> listFilm = cursorToFilm(res);
         return(listFilm);
+    }
+
+    public List<Event> cursorToEvent(Cursor res){
+        List<Event> listEvents = new ArrayList<Event>();
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+
+            List<Film> listFilms = stringToFilms(res.getString(res.getColumnIndex(EVENTS_COLUMN_FILMS)));
+
+            Event event = new Event(res.getString(res.getColumnIndex(EVENTS_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_TITRE)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_SOUSTITRE)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_AFFICHE)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_DESCRIPTION)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_VAD_CONDITION)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_PARTENAIRE)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_DATE_DEB)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_DATE_FIN)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_HEURE)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_CONTACT)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_WEB_LABEL)),
+                    res.getString(res.getColumnIndex(EVENTS_COLUMN_EVENEMENTTYPEID)),
+                    listFilms);
+            event.setTitre_wrapped(res.getString(res.getColumnIndex(EVENTS_COLUMN_TITRE_WRAPPED)));
+            event.setType_wrapped(res.getString(res.getColumnIndex(EVENTS_COLUMN_TYPE_WRAPPED)));
+
+            listEvents.add(event);
+            res.moveToNext();
+        }
+        return listEvents;
+    }
+
+    public List<Event> getAllEvents(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + EVENTS_TABLE_NAME, null);
+        List<Event> listEvents= cursorToEvent(res);
+        return(listEvents);
     }
 
     public List<Film.Medias> stringToMedias(String paths){
@@ -390,5 +452,15 @@ public class DBHelper extends SQLiteOpenHelper {
             }
         }
         return listVideos;
+    }
+
+    public List<Film> stringToFilms(String filmStringified){
+        List<Film> listFilm = new ArrayList<Film>();
+
+        List<String> listFilmId = Arrays.asList(filmStringified.split(","));
+        for (int i = 0; i < listFilmId.size(); i++){
+            listFilm.add(getFilmById(Integer.parseInt(listFilmId.get(i))));
+        }
+        return(listFilm);
     }
 }

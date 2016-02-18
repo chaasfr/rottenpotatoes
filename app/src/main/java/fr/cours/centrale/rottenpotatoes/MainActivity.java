@@ -14,15 +14,18 @@ import android.view.MenuItem;
 
 import java.util.List;
 
+import fr.cours.centrale.rottenpotatoes.event.Event;
+import fr.cours.centrale.rottenpotatoes.event.EventFragment;
 import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener, EventFragment.OnEventSelectedListener {
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
     public static List<Film> listFilmToShow;
+    public static List<Event> listEventToShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -94,6 +97,14 @@ public class MainActivity extends AppCompatActivity
         } else if (id == R.id.prochainement) {
 
         } else if (id == R.id.evenements) {
+            Fragment eventFragment = new EventFragment();
+
+            listEventToShow = rottenDB.getAllEvents();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, eventFragment)
+                    .commit();
 
         } else if (id == R.id.preferences) {
 
@@ -110,6 +121,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onFilmSelected(Film item) {
+
+    }
+
+    @Override
+    public void onEventSelected(Event event) {
 
     }
 }

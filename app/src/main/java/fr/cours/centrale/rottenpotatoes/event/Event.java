@@ -22,7 +22,12 @@ public class Event {
     private String web_label;
     private String evenementtypeid;
     private List<Film> films;
+    private String type_wrapped;
+    private String titre_wrapped;
 
+    /**
+     * Nous n'utilisons pas type_wrapped et titre_wrapped dans le constructeur car ils viennent de EventWrapped et sont récupérés dans la DB mais pas dans les JSON.
+     **/
     public Event(String id, String titre, String soustitre, String affiche, String description, String vad_condition, String partenaire, String date_deb, String date_fin,
                  String heure, String contact, String web_label, String evenementtypeid, List<Film> films) {
         this.id = id;
@@ -39,6 +44,22 @@ public class Event {
         this.web_label = web_label;
         this.evenementtypeid = evenementtypeid;
         this.films = films;
+    }
+
+    public String getType_wrapped() {
+        return type_wrapped;
+    }
+
+    public void setType_wrapped(String type_wrapped) {
+        this.type_wrapped = type_wrapped;
+    }
+
+    public String getTitre_wrapped() {
+        return titre_wrapped;
+    }
+
+    public void setTitre_wrapped(String titre_wrapped) {
+        this.titre_wrapped = titre_wrapped;
     }
 
     public String getId() {
@@ -157,9 +178,9 @@ public class Event {
         String films="";
         if(this.getFilms() != null) {
             for (int i = 0; i < this.getFilms().size(); i++) {
-                films =films+String.valueOf(this.getFilms().get(i).getId())+ ", ";
+                films =films+String.valueOf(this.getFilms().get(i).getId())+ ",";
             }
-            films=films.substring(0,films.length()-2);
+            films=films.substring(0,films.length()-1);
         }
         return films;
     }

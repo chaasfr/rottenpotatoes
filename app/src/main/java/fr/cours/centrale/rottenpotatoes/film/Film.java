@@ -278,33 +278,6 @@ public class Film {
         return medias;
     }
 
-    public String getMediasAsString(){
-        String media="";
-        if(this.getMedias() != null) {
-            for (int i = 0; i < this.getMedias().size(); i++) {
-                media =media+this.getMedias().get(i).getPath()+ ", ";
-            }
-            media=media.substring(0,media.length()-2);
-        }
-        return media;
-    }
-
-    public String getVideosAsString(){
-        String videos;
-        if(this.getVideos() != null){
-            videos="[{";
-            for (int i = 0; i < this.getVideos().size(); i++) {
-                Videos video= this.getVideos().get(i);
-                videos = videos + "\"titre\":\""+video.getTitre()+"\",\"type\":\""+video.getType()+"\",\"url\":\""+video.getUrl()+"\"},{";
-            }
-            videos=videos.substring(0,videos.length()-2);
-            videos= videos + "]";
-        }
-        else videos="";
-        return videos;
-
-    }
-
     public void setMedias(List<Medias> medias) {
         this.medias = medias;
     }
@@ -343,9 +316,6 @@ public class Film {
     }
 
 
-    /**
-     * Created by christian on 15/02/16.
-     */
     public static class Medias {
         private String path;
 
@@ -369,9 +339,6 @@ public class Film {
         }
     }
 
-    /**
-     * Created by christian on 15/02/16.
-     */
     public static class Videos {
         private String titre;
         private String type;

@@ -17,14 +17,8 @@ import java.util.List;
 
 import fr.cours.centrale.rottenpotatoes.AppController;
 import fr.cours.centrale.rottenpotatoes.R;
-import fr.cours.centrale.rottenpotatoes.film.FilmContent.DummyItem;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment.OnFilmSelectedListener;
 
-/**
- * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
- * specified {@link OnFilmSelectedListener}.
- * TODO: Replace the implementation with code for your data type.
- */
 public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecyclerViewAdapter.ViewHolder> {
 
     private final List<Film> mValues;

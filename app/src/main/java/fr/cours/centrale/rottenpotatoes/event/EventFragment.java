@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes.film;
+package fr.cours.centrale.rottenpotatoes.event;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -13,31 +13,25 @@ import android.view.ViewGroup;
 import fr.cours.centrale.rottenpotatoes.MainActivity;
 import fr.cours.centrale.rottenpotatoes.R;
 
-/**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFilmSelectedListener}
- * interface.
- */
-public class FilmFragment extends Fragment {
+public class EventFragment extends Fragment {
 
     // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
     // TODO: Customize parameters
     private int mColumnCount = 1;
-    private OnFilmSelectedListener mListener;
+    private OnEventSelectedListener mListener;
 
     /**
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public FilmFragment() {
+    public EventFragment() {
     }
 
     // TODO: Customize parameter initialization
     @SuppressWarnings("unused")
-    public static FilmFragment newInstance(int columnCount) {
-        FilmFragment fragment = new FilmFragment();
+    public static EventFragment newInstance(int columnCount) {
+        EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
         args.putInt(ARG_COLUMN_COUNT, columnCount);
         fragment.setArguments(args);
@@ -56,7 +50,7 @@ public class FilmFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_film_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_event_list, container, false);
 
         // Set the adapter
         if (view instanceof RecyclerView) {
@@ -67,7 +61,7 @@ public class FilmFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFilmRecyclerViewAdapter(MainActivity.listFilmToShow, mListener));
+            recyclerView.setAdapter(new MyEventViewAdapter(MainActivity.listEventToShow, mListener));
         }
         return view;
     }
@@ -76,8 +70,8 @@ public class FilmFragment extends Fragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        if (context instanceof OnFilmSelectedListener) {
-            mListener = (OnFilmSelectedListener) context;
+        if (context instanceof OnEventSelectedListener) {
+            mListener = (OnEventSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
                     + " must implement OnListFragmentInteractionListener");
@@ -100,8 +94,8 @@ public class FilmFragment extends Fragment {
      * "http://developer.android.com/training/basics/fragments/communicating.html"
      * >Communicating with Other Fragments</a> for more information.
      */
-    public interface OnFilmSelectedListener {
+    public interface OnEventSelectedListener {
         // TODO: Update argument type and name
-        void onFilmSelected(Film film);
+        void onEventSelected(Event event);
     }
 }

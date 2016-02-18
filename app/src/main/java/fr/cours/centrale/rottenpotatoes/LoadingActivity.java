@@ -112,14 +112,7 @@ public class LoadingActivity extends Activity {
                     if(listFilmProchainement != null) {
                         for (int i = 0; i < listFilmProchainement.getFilmsSeanceList().size(); i++) {
                             Film film = listFilmProchainement.getFilmsSeanceList().get(i);
-                            if(!rottenDB.checkIsFilmAlreadyInDb(film.getId())) {
-                                String media = film.getMediasAsString();
-                                String video = film.getVideosAsString();
-                                rottenDB.insertFilm(film.getId(), film.getTitre(), film.getTitre_ori(), film.getAffiche(), film.getWeb(), film.getDuree(), film.getDistributeur(), film.getParticipants(),
-                                        film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
-                                        film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
-                                        film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), true);
-                            } else rottenDB.updateProchainement(film.getId()); // pour éviter les doublons dans la DB avec makeFilmSeanceRequest.
+                            addFilmToDB(film, true); //true correspond à is_prochainement
                         }
                     }
                     prochainementsRequestIsDone=true;
@@ -150,8 +143,8 @@ public class LoadingActivity extends Activity {
                 for(JsonElement obj : jArray )
                 {
                     Seance seance = gson.fromJson(obj, Seance.class);
-                    rottenDB.insertSeance(seance.getId(), seance.getActual_date(), seance.getShow_time(), seance.getIs_troisd(), seance.getIs_malentendant(), seance.getIs_handicape(),
-                            seance.getNationality(), seance.getCinemaid(), seance.getFilmid(), seance.getTitre(), seance.getCategorieid(), seance.getPerformanceid(), seance.getCinema_salle());
+                    addSeanceToDB(seance);
+
                 }
                 seancesRequestIsDone=true;
                 if(checkRequestsAreDone()) showMainActivity();
@@ -181,16 +174,7 @@ public class LoadingActivity extends Activity {
                 for(JsonElement obj : jArray )
                 {
                     Film film = gson.fromJson( obj , Film.class);
-                    if(!rottenDB.checkIsFilmAlreadyInDb(film.getId())) {
-                        String media = gson.toJson(film.getMedias());
-                                //film.getMediasAsString();
-                        String video = gson.toJson(film.getVideos());
-                                //film.getVideosAsString();
-                        rottenDB.insertFilm(film.getId(), film.getTitre(), film.getTitre_ori(), film.getAffiche(), film.getWeb(), film.getDuree(), film.getDistributeur(), film.getParticipants(),
-                                film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
-                                film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
-                                film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), false);
-                    }
+                    addFilmToDB(film, false); // false car le film n'est pas "prochainement"
                 }
                 filmSeancesRequestIsDone=true;
                 if(checkRequestsAreDone()) showMainActivity();
@@ -224,10 +208,7 @@ public class LoadingActivity extends Activity {
                         for(int i = 0; i< eventWrapped.getEvents().size(); i++)
                         {
                             Event event= eventWrapped.getEvents().get(i);
-                            String films= event.getFilmsIdAsString();
-                            rottenDB.insertEvent(event.getId(),event.getTitre(),event.getSoustitre(),event.getAffiche(),event.getDescription(),event.getVad_condition(),
-                                    event.getPartenaire(),event.getDate_deb(),event.getDate_fin(),event.getHeure(),event.getContact(),event.getWeb_label(),event.getEvenementtypeid(),
-                                    films, eventWrapped.getType(),eventWrapped.getTitre());
+                            addEventToDB(event, eventWrapped.getTitre(),eventWrapped.getType());
                         }
                     }
 
@@ -247,6 +228,34 @@ public class LoadingActivity extends Activity {
         });
         // Adding request to request queue
         AppController.getInstance().addToRequestQueue(jsonArrReq);
+    }
+
+    private void addFilmToDB(Film film, boolean is_Prochainement){
+        Gson gson = new Gson();
+        if(!rottenDB.checkIsFilmAlreadyInDb(film.getId())) {
+            String media = gson.toJson(film.getMedias());
+            String video = gson.toJson(film.getVideos());
+            rottenDB.insertFilm(film.getId(), film.getTitre(), film.getTitre_ori(), film.getAffiche(), film.getWeb(), film.getDuree(), film.getDistributeur(), film.getParticipants(),
+                    film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
+                    film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
+                    film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), is_Prochainement);
+        } else if (is_Prochainement) rottenDB.updateProchainement(film.getId()); // pour éviter les doublons dans la DB avec entre makeProchainementRequest et makeFilmSeanceRequest.
+    }
+
+    private void addEventToDB(Event event, String titre_wrapped, String type_wrapped){
+        String films= event.getFilmsIdAsString();
+        //Rajoute les films qui ne sont que dans des événements à la DB
+        for(int i = 0;i<event.getFilms().size();i++){
+            addFilmToDB(event.getFilms().get(i),false);
+        }
+        rottenDB.insertEvent(event.getId(),event.getTitre(),event.getSoustitre(),event.getAffiche(),event.getDescription(),event.getVad_condition(),
+                event.getPartenaire(),event.getDate_deb(),event.getDate_fin(),event.getHeure(),event.getContact(),event.getWeb_label(),event.getEvenementtypeid(),
+                films, type_wrapped,titre_wrapped);
+    }
+
+    private void addSeanceToDB(Seance seance){
+        rottenDB.insertSeance(seance.getId(), seance.getActual_date(), seance.getShow_time(), seance.getIs_troisd(), seance.getIs_malentendant(), seance.getIs_handicape(),
+                seance.getNationality(), seance.getCinemaid(), seance.getFilmid(), seance.getTitre(), seance.getCategorieid(), seance.getPerformanceid(), seance.getCinema_salle());
     }
 
     private Boolean checkRequestsAreDone(){
@@ -271,7 +280,6 @@ public class LoadingActivity extends Activity {
         AlertDialog alert = builder.create();
         alert.show();
     }
-
 
     private void showpDialog() {
         if (!pDialog.isShowing())
