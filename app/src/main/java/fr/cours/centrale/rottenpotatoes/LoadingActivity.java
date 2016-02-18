@@ -1,8 +1,13 @@
 package fr.cours.centrale.rottenpotatoes;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.widget.Toast;
 
@@ -34,11 +39,6 @@ public class LoadingActivity extends Activity {
     private String urlProchainement = "http://centrale.corellis.eu/prochainement.json";
     private String urlSeances = "http://centrale.corellis.eu/seances.json";
 
-    private String listFilmProchainementSerialized = null;
-    private String listSeanceSerialized = null;
-    private String listFilmsSerialized = null;
-    private String listEventWrappedSerialized = null;
-
     private boolean prochainementsRequestIsDone= false;
     private boolean eventsRequestIsDone= false;
     private boolean filmSeancesRequestIsDone= false;
@@ -56,22 +56,40 @@ public class LoadingActivity extends Activity {
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(true);
         showpDialog();
-
         rottenDB = new DBHelper(this);
 
-        deleteCurrentDB();
-
-        makeProchainementRequest();
-        makeSeancesRequest();
-        makeFilmSeancesRequest();
-        makeEventRequest();
+        if(!isDBUpToDate()){
+            if(isOnline()) {
+                makeProchainementRequest();
+                makeSeancesRequest();
+                makeFilmSeancesRequest();
+                makeEventRequest();
+            }
+            else noConnectionMessage();
+        }
+        else showMainActivity();
     }
 
-    private void deleteCurrentDB(){
+    public boolean isOnline() {
+        ConnectivityManager cm =
+                (ConnectivityManager) getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo netInfo = cm.getActiveNetworkInfo();
+        return netInfo != null && netInfo.isConnectedOrConnecting();
+    }
+
+    private boolean isDBUpToDate(){
+        /**
+        * On regarde uniquement si la DB existe sur le téléphone, puisqu'elle n'est jamais mise à jour sur centrale.corellis.eu.
+         * Si on voulait implémenter un versionning, ce serait ici: on comparerait la version de centrale.corellis.eu à celle de rottenDB.
+         **/
+        boolean dbUpToDate = false;
         String destPath = "/data/data/" + getPackageName()
                 + "/databases/" + DBHelper.DATABASE_NAME;
         File f = new File(destPath);
-        if (f.exists()) f.delete();
+        if (f.exists()){
+            dbUpToDate = rottenDB.numberOfFilms() > 1 ;
+        }
+        return dbUpToDate;
     }
 
     /**
@@ -95,7 +113,7 @@ public class LoadingActivity extends Activity {
                                         film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
                                         film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
                                         film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), true);
-                            } else rottenDB.updateProchainement(film.getId());
+                            } else rottenDB.updateProchainement(film.getId()); // pour éviter les doublons dans la DB avec makeFilmSeanceRequest.
                         }
                     }
                     prochainementsRequestIsDone=true;
@@ -228,6 +246,19 @@ public class LoadingActivity extends Activity {
         hidepDialog();
         Intent intent = new Intent(this,MainActivity.class);
         startActivity(intent);
+    }
+
+    private void noConnectionMessage(){
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setMessage("No internet connection. You can edit your preferences, but you need internet to load the movies!")
+                .setCancelable(false)
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showMainActivity();
+                    }
+                });
+        AlertDialog alert = builder.create();
+        alert.show();
     }
 
 

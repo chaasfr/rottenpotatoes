@@ -11,6 +11,9 @@ import java.util.ArrayList;
 
 /**
  * Created by christian on 16/02/16.
+ *
+ * Cette classe traduits tous les accès en requêtes SQL pour la base de données.
+ * La DB contient 3 tables: films, events et séances. Les films à l'affiche et prochainement sont stockées dans la même table, on rajoute simplement un chanm IS_PROCHAINEMENT pour les différencier.
  */
 public class DBHelper extends SQLiteOpenHelper {
     public static final String DATABASE_NAME = "RottenPotatoes.db";
