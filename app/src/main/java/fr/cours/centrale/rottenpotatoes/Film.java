@@ -340,4 +340,7 @@ public class Film {
                 ", is_lastWeek=" + is_lastWeek +
                 '}';
     }
+
+
+
 }

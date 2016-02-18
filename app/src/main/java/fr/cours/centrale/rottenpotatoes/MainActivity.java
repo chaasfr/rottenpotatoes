@@ -2,6 +2,8 @@ package fr.cours.centrale.rottenpotatoes;
 
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
@@ -11,8 +13,10 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.ListView;
 
+import fr.cours.centrale.rottenpotatoes.dummy.DummyContent;
+
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener {
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
@@ -83,6 +87,13 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.affiche) {
+            Fragment filmFragment = new FilmFragment();
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, filmFragment)
+                    .commit();
 
         } else if (id == R.id.prochainement) {
 
@@ -99,5 +110,10 @@ public class MainActivity extends AppCompatActivity
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
         return true;
+    }
+
+    @Override
+    public void onFilmSelected(DummyContent.DummyItem item) {
+
     }
 }
