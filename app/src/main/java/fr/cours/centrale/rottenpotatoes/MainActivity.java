@@ -11,23 +11,18 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.widget.ListView;
 
-import fr.cours.centrale.rottenpotatoes.dummy.DummyContent;
+import java.util.List;
+
+import fr.cours.centrale.rottenpotatoes.film.Film;
+import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener {
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
-    ListView mListView;
-    String[] prenoms = new String[]{
-            "Antoine", "Benoit", "Cyril", "David", "Eloise", "Florent",
-            "Gerard", "Hugo", "Ingrid", "Jonathan", "Kevin", "Logan",
-            "Mathieu", "Noemie", "Olivia", "Philippe", "Quentin", "Romain",
-            "Sophie", "Tristan", "Ulric", "Vincent", "Willy", "Xavier",
-            "Yann", "Zoé"
-    };
+    public static List<Film> listFilmToShow;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -89,6 +84,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.affiche) {
             Fragment filmFragment = new FilmFragment();
 
+            listFilmToShow = rottenDB.getAllFilm();
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -113,7 +109,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilmSelected(DummyContent.DummyItem item) {
+    public void onFilmSelected(Film item) {
 
     }
 }

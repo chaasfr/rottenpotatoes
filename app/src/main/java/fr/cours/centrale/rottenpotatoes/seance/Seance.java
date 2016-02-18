@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.seance;
 
 /**
  * Created by christian on 04/02/16.

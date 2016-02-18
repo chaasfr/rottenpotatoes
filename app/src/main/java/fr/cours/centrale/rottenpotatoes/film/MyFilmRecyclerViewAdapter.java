@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.film;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -8,8 +8,9 @@ import android.widget.TextView;
 
 import java.util.List;
 
-import fr.cours.centrale.rottenpotatoes.FilmFragment.OnFilmSelectedListener;
-import fr.cours.centrale.rottenpotatoes.dummy.DummyContent.DummyItem;
+import fr.cours.centrale.rottenpotatoes.R;
+import fr.cours.centrale.rottenpotatoes.film.FilmContent.DummyItem;
+import fr.cours.centrale.rottenpotatoes.film.FilmFragment.OnFilmSelectedListener;
 
 /**
  * {@link RecyclerView.Adapter} that can display a {@link DummyItem} and makes a call to the
@@ -18,10 +19,10 @@ import fr.cours.centrale.rottenpotatoes.dummy.DummyContent.DummyItem;
  */
 public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecyclerViewAdapter.ViewHolder> {
 
-    private final List<DummyItem> mValues;
+    private final List<Film> mValues;
     private final OnFilmSelectedListener mListener;
 
-    public MyFilmRecyclerViewAdapter(List<DummyItem> items, OnFilmSelectedListener listener) {
+    public MyFilmRecyclerViewAdapter(List<Film> items, OnFilmSelectedListener listener) {
         mValues = items;
         mListener = listener;
     }
@@ -35,9 +36,9 @@ public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecycl
 
     @Override
     public void onBindViewHolder(final ViewHolder holder, int position) {
-        holder.mItem = mValues.get(position);
-        holder.mIdView.setText(mValues.get(position).id);
-        holder.mContentView.setText(mValues.get(position).content);
+        holder.mFilm = mValues.get(position);
+        holder.mIdView.setText(mValues.get(position).getTitre());
+        holder.mContentView.setText(mValues.get(position).getCategorie());
 
         holder.mView.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -45,7 +46,7 @@ public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecycl
                 if (null != mListener) {
                     // Notify the active callbacks interface (the activity, if the
                     // fragment is attached to one) that an item has been selected.
-                    mListener.onFilmSelected(holder.mItem);
+                    mListener.onFilmSelected(holder.mFilm);
                 }
             }
         });
@@ -60,7 +61,7 @@ public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecycl
         public final View mView;
         public final TextView mIdView;
         public final TextView mContentView;
-        public DummyItem mItem;
+        public Film mFilm;
 
         public ViewHolder(View view) {
             super(view);

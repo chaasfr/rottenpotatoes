@@ -6,8 +6,18 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
+import fr.cours.centrale.rottenpotatoes.film.Film;
 
 /**
  * Created by christian on 16/02/16.
@@ -16,6 +26,8 @@ import java.util.ArrayList;
  * La DB contient 3 tables: films, events et séances. Les films à l'affiche et prochainement sont stockées dans la même table, on rajoute simplement un chanm IS_PROCHAINEMENT pour les différencier.
  */
 public class DBHelper extends SQLiteOpenHelper {
+    private static String TAG = DBHelper.class.getSimpleName();
+
     public static final String DATABASE_NAME = "RottenPotatoes.db";
 
     public static final String FILMS_TABLE_NAME= "films";
@@ -295,7 +307,6 @@ public class DBHelper extends SQLiteOpenHelper {
     {
         ArrayList<String> array_list = new ArrayList<String>();
 
-        //hp = new HashMap();
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery( "select * from seances", null );
         res.moveToFirst();
@@ -305,5 +316,81 @@ public class DBHelper extends SQLiteOpenHelper {
             res.moveToNext();
         }
         return array_list;
+    }
+
+    public ArrayList<Film> getAllFilm(){
+        ArrayList<Film> listFilm = new ArrayList<Film>();
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery( "select * from "+FILMS_TABLE_NAME, null );
+        res.moveToFirst();
+
+        while(res.isAfterLast() == false){
+
+            String paths = res.getString(res.getColumnIndex(FILMS_COLUMN_MEDIAS));
+            String videoStringified= res.getString(res.getColumnIndex(FILMS_COLUMN_VIDEOS));
+            List<Film.Medias> listMedias = stringToMedias(paths);
+            List<Film.Videos> listVideos = stringToVideos(videoStringified);
+
+            Film film = new Film(res.getInt(res.getColumnIndex(FILMS_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_TITRE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_TITRE_ORI)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_AFFICHE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_WEB)),
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_DUREE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_DISTRIBUTEUR)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_PARTICIPANTS)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_REALISATEUR)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_SYNOPSIS)),
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_ANNEE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_DATE_SORTIE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_INFO)),
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_IS_VISIBLE))==1,
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_IS_VENTE))==1,
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_GENREID)),
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_CATEGORIEID)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_GENRE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_CATEGORIE)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_RELEASENUMBER)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_PAYS)),
+                    res.getString(res.getColumnIndex(FILMS_COLUMN_SHARE_URL)),
+                    listMedias,
+                    listVideos,
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_IS_AVP))==1,
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_IS_ALAUNE))==1,
+                    res.getInt(res.getColumnIndex(FILMS_COLUMN_IS_LASTWEEK))==1
+            );
+
+            listFilm.add(film);
+            res.moveToNext();
+        }
+        return(listFilm);
+    }
+
+    public List<Film.Medias> stringToMedias(String paths){
+        ArrayList<Film.Medias> listMedias = new ArrayList<Film.Medias>();
+        if(paths.length()>0) {
+            List<String> pathList = Arrays.asList(paths.split(","));
+
+            for (int i = 0; i < pathList.size(); i++) {
+                listMedias.add(new Film.Medias(pathList.get(i)));
+            }
+        }
+        return listMedias;
+    }
+
+    public List<Film.Videos> stringToVideos(String videoStringified){
+        Gson gson = new Gson();
+        JsonParser parser = new JsonParser();
+        ArrayList<Film.Videos> listVideos = new ArrayList<Film.Videos>();
+        if(videoStringified.length()>10) {
+            Log.d(TAG, videoStringified );
+            JsonArray jArray = parser.parse(videoStringified).getAsJsonArray();
+            for(JsonElement obj : jArray ) {
+                Film.Videos video = gson.fromJson( obj , Film.Videos.class);
+                        listVideos.add(video);
+            }
+        }
+        return listVideos;
     }
 }

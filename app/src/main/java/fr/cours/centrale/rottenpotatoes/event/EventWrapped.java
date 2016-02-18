@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.event;
 
 import java.util.List;
 

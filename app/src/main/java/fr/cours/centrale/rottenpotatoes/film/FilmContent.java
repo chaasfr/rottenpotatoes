@@ -1,27 +1,25 @@
-package fr.cours.centrale.rottenpotatoes.dummy;
+package fr.cours.centrale.rottenpotatoes.film;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Helper class for providing sample content for user interfaces created by
- * Android template wizards.
- * <p/>
- * TODO: Replace all uses of this class before publishing your app.
- */
-public class DummyContent {
+import fr.cours.centrale.rottenpotatoes.MainActivity;
+
+public class FilmContent {
 
     /**
      * An array of sample (dummy) items.
      */
     public static final List<DummyItem> ITEMS = new ArrayList<DummyItem>();
+    public static final List<Film> FILM_LIST = MainActivity.listFilmToShow;
 
     /**
      * A map of sample (dummy) items, by ID.
      */
     public static final Map<String, DummyItem> ITEM_MAP = new HashMap<String, DummyItem>();
+    public static final Map<String,Film> FILM_MAP = new HashMap<String, Film>();
 
     private static final int COUNT = 25;
 
@@ -30,6 +28,11 @@ public class DummyContent {
         for (int i = 1; i <= COUNT; i++) {
             addItem(createDummyItem(i));
         }
+    }
+
+    private static void addFilm(Film film) {
+        FILM_LIST.add(film);
+        FILM_MAP.put(String.valueOf(film.getId()), film);
     }
 
     private static void addItem(DummyItem item) {

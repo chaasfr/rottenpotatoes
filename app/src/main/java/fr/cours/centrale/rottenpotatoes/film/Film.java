@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.film;
 
 import java.util.List;
 
@@ -292,12 +292,13 @@ public class Film {
     public String getVideosAsString(){
         String videos;
         if(this.getVideos() != null){
-            videos="{";
+            videos="[{";
             for (int i = 0; i < this.getVideos().size(); i++) {
                 Videos video= this.getVideos().get(i);
-                videos = videos + "\"titre\" : \""+video.getTitre()+"\", \"type\" : \""+video.getType()+"\", \"url\" : \""+video.getUrl()+"\"}, {";
+                videos = videos + "\"titre\":\""+video.getTitre()+"\",\"type\":\""+video.getType()+"\",\"url\":\""+video.getUrl()+"\"},{";
             }
             videos=videos.substring(0,videos.length()-2);
+            videos= videos + "]";
         }
         else videos="";
         return videos;
@@ -342,5 +343,77 @@ public class Film {
     }
 
 
+    /**
+     * Created by christian on 15/02/16.
+     */
+    public static class Medias {
+        private String path;
 
+        public Medias(String path) {
+            this.path = path;
+        }
+
+        public String getPath() {
+            return path;
+        }
+
+        public void setPath(String paths) {
+            this.path = paths;
+        }
+
+        @Override
+        public String toString() {
+            return "Medias{" +
+                    "paths=" + path +
+                    '}';
+        }
+    }
+
+    /**
+     * Created by christian on 15/02/16.
+     */
+    public static class Videos {
+        private String titre;
+        private String type;
+        private String url;
+
+        public Videos(String titre, String type, String url) {
+            this.titre = titre;
+            this.type = type;
+            this.url = url;
+        }
+
+        public String getTitre() {
+            return titre;
+        }
+
+        public void setTitre(String titre) {
+            this.titre = titre;
+        }
+
+        public String getType() {
+            return type;
+        }
+
+        public void setType(String type) {
+            this.type = type;
+        }
+
+        public String getUrl() {
+            return url;
+        }
+
+        public void setUrl(String url) {
+            this.url = url;
+        }
+
+        @Override
+        public String toString() {
+            return "Videos{" +
+                    "titre='" + titre + '\'' +
+                    ", type=" + type +
+                    ", url='" + url + '\'' +
+                    '}';
+        }
+    }
 }

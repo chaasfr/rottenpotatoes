@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.film;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -10,8 +10,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import fr.cours.centrale.rottenpotatoes.dummy.DummyContent;
-import fr.cours.centrale.rottenpotatoes.dummy.DummyContent.DummyItem;
+import fr.cours.centrale.rottenpotatoes.R;
 
 /**
  * A fragment representing a list of Items.
@@ -67,7 +66,7 @@ public class FilmFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFilmRecyclerViewAdapter(DummyContent.ITEMS, mListener));
+            recyclerView.setAdapter(new MyFilmRecyclerViewAdapter(FilmContent.FILM_LIST, mListener));
         }
         return view;
     }
@@ -102,6 +101,6 @@ public class FilmFragment extends Fragment {
      */
     public interface OnFilmSelectedListener {
         // TODO: Update argument type and name
-        void onFilmSelected(DummyItem item);
+        void onFilmSelected(Film film);
     }
 }

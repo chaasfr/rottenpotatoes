@@ -1,6 +1,8 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.event;
 
 import java.util.List;
+
+import fr.cours.centrale.rottenpotatoes.film.Film;
 
 /**
  * Created by christian on 04/02/16.

@@ -27,6 +27,12 @@ import org.json.JSONObject;
 
 import java.io.File;
 
+import fr.cours.centrale.rottenpotatoes.event.Event;
+import fr.cours.centrale.rottenpotatoes.event.EventWrapped;
+import fr.cours.centrale.rottenpotatoes.film.Film;
+import fr.cours.centrale.rottenpotatoes.film.FilmSeanceList;
+import fr.cours.centrale.rottenpotatoes.seance.Seance;
+
 public class LoadingActivity extends Activity {
 
     private static String TAG = LoadingActivity.class.getSimpleName();
@@ -125,6 +131,7 @@ public class LoadingActivity extends Activity {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Toast.makeText(getApplicationContext(),
                             "failed to retrieve Upcomming Films", Toast.LENGTH_SHORT).show();
+                    showMainActivity();
                 }
             });
             // Adding request to request queue
@@ -155,6 +162,7 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve seances", Toast.LENGTH_SHORT).show();
+                showMainActivity();
             }
         });
         // Adding request to request queue
@@ -174,8 +182,10 @@ public class LoadingActivity extends Activity {
                 {
                     Film film = gson.fromJson( obj , Film.class);
                     if(!rottenDB.checkIsFilmAlreadyInDb(film.getId())) {
-                        String media = film.getMediasAsString();
-                        String video = film.getVideosAsString();
+                        String media = gson.toJson(film.getMedias());
+                                //film.getMediasAsString();
+                        String video = gson.toJson(film.getVideos());
+                                //film.getVideosAsString();
                         rottenDB.insertFilm(film.getId(), film.getTitre(), film.getTitre_ori(), film.getAffiche(), film.getWeb(), film.getDuree(), film.getDistributeur(), film.getParticipants(),
                                 film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
                                 film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
@@ -191,7 +201,7 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve Films", Toast.LENGTH_SHORT).show();
-                // hide the progress dialog
+                showMainActivity();
             }
         });
         // Adding request to request queue
@@ -231,6 +241,7 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve Events", Toast.LENGTH_SHORT).show();
+                showMainActivity();
                 // hide the progress dialog
             }
         });
