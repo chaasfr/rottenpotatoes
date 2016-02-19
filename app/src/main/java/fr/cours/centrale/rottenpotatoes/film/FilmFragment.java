@@ -14,16 +14,11 @@ import fr.cours.centrale.rottenpotatoes.MainActivity;
 import fr.cours.centrale.rottenpotatoes.R;
 
 /**
- * A fragment representing a list of Items.
- * <p/>
- * Activities containing this fragment MUST implement the {@link OnFilmSelectedListener}
- * interface.
+ * Fragment contenant l'affichage des films
  */
 public class FilmFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnFilmSelectedListener mListener;
 
@@ -34,8 +29,6 @@ public class FilmFragment extends Fragment {
     public FilmFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static FilmFragment newInstance(int columnCount) {
         FilmFragment fragment = new FilmFragment();
         Bundle args = new Bundle();
@@ -80,7 +73,7 @@ public class FilmFragment extends Fragment {
             mListener = (OnFilmSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnFilmSelectedListener");
         }
     }
 
@@ -91,17 +84,9 @@ public class FilmFragment extends Fragment {
     }
 
     /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
+     * Interface pour communiquer avec MainActivity et les autres Fragments
      */
     public interface OnFilmSelectedListener {
-        // TODO: Update argument type and name
         void onFilmSelected(Film film);
     }
 }

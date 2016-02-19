@@ -15,9 +15,7 @@ import fr.cours.centrale.rottenpotatoes.R;
 
 public class EventFragment extends Fragment {
 
-    // TODO: Customize parameter argument names
     private static final String ARG_COLUMN_COUNT = "column-count";
-    // TODO: Customize parameters
     private int mColumnCount = 1;
     private OnEventSelectedListener mListener;
 
@@ -28,8 +26,6 @@ public class EventFragment extends Fragment {
     public EventFragment() {
     }
 
-    // TODO: Customize parameter initialization
-    @SuppressWarnings("unused")
     public static EventFragment newInstance(int columnCount) {
         EventFragment fragment = new EventFragment();
         Bundle args = new Bundle();
@@ -74,7 +70,7 @@ public class EventFragment extends Fragment {
             mListener = (OnEventSelectedListener) context;
         } else {
             throw new RuntimeException(context.toString()
-                    + " must implement OnListFragmentInteractionListener");
+                    + " must implement OnEventSelectedListener");
         }
     }
 
@@ -84,18 +80,7 @@ public class EventFragment extends Fragment {
         mListener = null;
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p/>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
     public interface OnEventSelectedListener {
-        // TODO: Update argument type and name
         void onEventSelected(Event event);
     }
 }

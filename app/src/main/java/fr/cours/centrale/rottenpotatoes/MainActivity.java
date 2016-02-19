@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import fr.cours.centrale.rottenpotatoes.event.Event;
@@ -35,8 +36,6 @@ public class MainActivity extends AppCompatActivity
     public static List<String> listCinemaSelected;
     public static List<String> listCategorie;
     public static List<String> listCategorieSelected;
-    public static List<String> listGenre;
-    public static List<String> listGenreSelected;
     public static boolean user_wants_troisd;
     public static boolean user_wants_malentendant;
     public static boolean user_wants_handicape;
@@ -58,6 +57,7 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
+        showAlAfficheFragment();
     }
 
     @Override
@@ -99,50 +99,16 @@ public class MainActivity extends AppCompatActivity
         int id = item.getItemId();
 
         if (id == R.id.affiche) {
-            Fragment filmFragment = new FilmFragment();
-
-            listFilmToShow = rottenDB.getAllFilmAlAffiche();
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, filmFragment)
-                    .commit();
+            showAlAfficheFragment();
 
         } else if (id == R.id.prochainement) {
-            Fragment filmFragment = new FilmFragment();
-
-            listFilmToShow = rottenDB.getAllFilmProchainement();
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, filmFragment)
-                    .commit();
+            showProchainementFragment();
 
         } else if (id == R.id.evenements) {
-            Fragment eventFragment = new EventFragment();
-
-            listEventToShow = rottenDB.getAllEvents();
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, eventFragment)
-                    .commit();
+            showEventFragment();
 
         } else if (id == R.id.preferences) {
-            Fragment parametersFragment = new ParametersFragment();
-
-            listNationality = rottenDB.getAllNationality();
-            listCinema.add("Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
-            listCinema.add("Le Renoir");  // cinemaid 2
-            listCinema.add("Le Mazarin"); // cinemaid 3
-
-            listCategorie = rottenDB.getAllCategorie();
-
-            // Insert the fragment by replacing any existing fragment
-            FragmentManager fragmentManager = getSupportFragmentManager();
-            fragmentManager.beginTransaction()
-                    .replace(R.id.content_frame, parametersFragment)
-                    .commit();
+            showPreferenceFragment();
 
         }
 
@@ -151,6 +117,57 @@ public class MainActivity extends AppCompatActivity
         return true;
     }
 
+
+    public void showAlAfficheFragment(){
+        Fragment filmFragment = new FilmFragment();
+
+        listFilmToShow = rottenDB.getAllFilmAlAffiche();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, filmFragment)
+                .commit();
+    }
+
+    public void showProchainementFragment(){
+        Fragment filmFragment = new FilmFragment();
+
+        listFilmToShow = rottenDB.getAllFilmProchainement();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, filmFragment)
+                .commit();
+    }
+
+    public void showEventFragment(){
+        Fragment eventFragment = new EventFragment();
+
+        listEventToShow = rottenDB.getAllEvents();
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, eventFragment)
+                .commit();
+    }
+
+    public void showPreferenceFragment(){
+        Fragment parametersFragment = new ParametersFragment();
+
+        listCinema = new ArrayList<String>();
+        listCinema.add("Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
+        listCinema.add("Le Renoir");  // cinemaid 2
+        listCinema.add("Le Mazarin"); // cinemaid 3
+
+        listNationality = rottenDB.getAllNationality();
+        listCategorie = rottenDB.getAllCategorie();
+
+        // Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, parametersFragment)
+                .commit();
+    }
     @Override
     public void onFilmSelected(Film film) {
 

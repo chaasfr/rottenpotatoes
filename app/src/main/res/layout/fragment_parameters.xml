@@ -4,10 +4,134 @@
     android:layout_height="match_parent"
     tools:context="fr.cours.centrale.rottenpotatoes.ParametersFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/cinemaTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/cinemas" />
 
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCinema1"
+            android:id="@+id/checkBoxCinema1"
+            android:layout_below="@+id/cinemaTitle"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCinema2"
+            android:id="@+id/checkBoxCinema2"
+            android:layout_below="@+id/checkBoxCinema1"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCinema3"
+            android:id="@+id/checkBoxCinema3"
+            android:layout_below="@+id/checkBoxCinema2"/>
+
+
+
+        <TextView
+            android:id="@+id/nationalityTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/nationality"
+            android:layout_below="@id/checkBoxCinema3"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxNationality1"
+            android:id="@+id/checkBoxNationality1"
+            android:layout_below="@+id/nationalityTitle"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxNationality2"
+            android:id="@+id/checkBoxNationality2"
+            android:layout_below="@+id/checkBoxNationality1"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxNationality3"
+            android:id="@+id/checkBoxNationality3"
+            android:layout_below="@+id/checkBoxNationality2"/>
+
+        <TextView
+            android:id="@+id/categorieTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/categorie"
+            android:layout_below="@id/checkBoxNationality3"/>
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCategorie1"
+            android:id="@+id/checkBoxCategorie1"
+            android:layout_below="@+id/categorieTitle" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCategorie2"
+            android:id="@+id/checkBoxCategorie2"
+            android:layout_below="@+id/checkBoxCategorie1" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCategorie3"
+            android:id="@+id/checkBoxCategorie3"
+            android:layout_below="@+id/checkBoxCategorie2" />
+        <CheckBox
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/checkBoxCategorie4"
+            android:id="@+id/checkBoxCategorie4"
+            android:layout_below="@+id/checkBoxCategorie3"/>
+
+        <TextView
+            android:id="@+id/troisD"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/troisD"
+            android:layout_below="@id/checkBoxCategorie4"/>
+        <Spinner
+            android:id="@+id/troisD_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/troisD"
+            android:layout_toRightOf="@+id/troisD"/>
+
+        <TextView
+            android:id="@+id/malEntendant"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/malEntendant"
+            android:layout_below="@id/troisD"/>
+        <Spinner
+            android:id="@+id/malEntendantSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/malEntendant"
+            android:layout_toRightOf="@+id/malEntendant"/>
+
+        <TextView
+            android:id="@+id/handicape"
+            android:textSize="20sp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/handicape"
+            android:layout_below="@id/malEntendant"/>
+        <Spinner
+            android:id="@+id/handicapeSpinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@+id/handicape"
+            android:layout_toRightOf="@+id/handicape"/>
+
+
+    </RelativeLayout>
 </FrameLayout>

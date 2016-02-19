@@ -7,6 +7,29 @@
 
     <string name="action_settings">Settings</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="cinemas">Cinéma:</string>
+    <string name="nationality">Langue:</string>
+    <string name="categorie">Public:</string>
+    <string name="troisD">3D:</string>
+    <string name="malEntendant">Mal Entendant:</string>
+    <string name="handicape">Handicapé:</string>
+
+    <string name="checkBoxCinema1">Le Cézanne</string>
+    <string name="checkBoxCinema2">Le Renoir</string>
+    <string name="checkBoxCinema3">Le Mazarin</string>
+
+    <string name="checkBoxNationality1">VF</string>
+    <string name="checkBoxNationality2">VO</string>
+    <string name="checkBoxNationality3">VD</string>
+
+    <string name="checkBoxCategorie1">Tout Public</string>
+    <string name="checkBoxCategorie2">Jeune public</string>
+    <string name="checkBoxCategorie3">Interdit moins de 12 ans</string>
+    <string name="checkBoxCategorie4">Avertissement</string>
+
+    <string-array name="choice_array">
+        <item>Obligatoirement</item>
+        <item>Surtout pas</item>
+        <item>Peu importe</item>
+    </string-array>
 </resources>
