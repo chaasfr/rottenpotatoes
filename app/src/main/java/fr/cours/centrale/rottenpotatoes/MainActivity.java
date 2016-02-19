@@ -1,5 +1,6 @@
 package fr.cours.centrale.rottenpotatoes;
 
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
@@ -20,12 +21,25 @@ import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener, EventFragment.OnEventSelectedListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener, EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener {
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
     public static List<Film> listFilmToShow;
     public static List<Event> listEventToShow;
+
+    //PARAMETRES POUR LA RECHERCHE
+    public static List<String> listNationality; // liste toutes les langues de films possibles
+    public static List<String> listNationalitySelected; // liste toutes les langues de films choisies par l'utilisateur
+    public static List<String> listCinema;
+    public static List<String> listCinemaSelected;
+    public static List<String> listCategorie;
+    public static List<String> listCategorieSelected;
+    public static List<String> listGenre;
+    public static List<String> listGenreSelected;
+    public static boolean user_wants_troisd;
+    public static boolean user_wants_malentendant;
+    public static boolean user_wants_handicape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,7 +101,7 @@ public class MainActivity extends AppCompatActivity
         if (id == R.id.affiche) {
             Fragment filmFragment = new FilmFragment();
 
-            listFilmToShow = rottenDB.getAllFilm();
+            listFilmToShow = rottenDB.getAllFilmAlAffiche();
             // Insert the fragment by replacing any existing fragment
             FragmentManager fragmentManager = getSupportFragmentManager();
             fragmentManager.beginTransaction()
@@ -95,6 +109,14 @@ public class MainActivity extends AppCompatActivity
                     .commit();
 
         } else if (id == R.id.prochainement) {
+            Fragment filmFragment = new FilmFragment();
+
+            listFilmToShow = rottenDB.getAllFilmProchainement();
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, filmFragment)
+                    .commit();
 
         } else if (id == R.id.evenements) {
             Fragment eventFragment = new EventFragment();
@@ -107,10 +129,20 @@ public class MainActivity extends AppCompatActivity
                     .commit();
 
         } else if (id == R.id.preferences) {
+            Fragment parametersFragment = new ParametersFragment();
 
-        } else if (id == R.id.nav_share) {
+            listNationality = rottenDB.getAllNationality();
+            listCinema.add("Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
+            listCinema.add("Le Renoir");  // cinemaid 2
+            listCinema.add("Le Mazarin"); // cinemaid 3
 
-        } else if (id == R.id.nav_send) {
+            listCategorie = rottenDB.getAllCategorie();
+
+            // Insert the fragment by replacing any existing fragment
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.content_frame, parametersFragment)
+                    .commit();
 
         }
 
@@ -120,12 +152,17 @@ public class MainActivity extends AppCompatActivity
     }
 
     @Override
-    public void onFilmSelected(Film item) {
+    public void onFilmSelected(Film film) {
 
     }
 
     @Override
     public void onEventSelected(Event event) {
+
+    }
+
+    @Override
+    public void onParametersInteraction(Uri uri) {
 
     }
 }

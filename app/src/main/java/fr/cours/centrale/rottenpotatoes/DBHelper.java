@@ -6,6 +6,7 @@ import android.database.Cursor;
 import android.database.DatabaseUtils;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonArray;
@@ -388,7 +389,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public Film getFilmById(int Id){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_ID + "=" + Id + "", null);
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_ID + "=" + Id, null);
         Film film = cursorToFilm(res).get(0);
         return film;
     }
@@ -396,6 +397,22 @@ public class DBHelper extends SQLiteOpenHelper {
     public List<Film> getAllFilm(){
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME, null);
+
+        List<Film> listFilm = cursorToFilm(res);
+        return(listFilm);
+    }
+
+    public List<Film> getAllFilmAlAffiche(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME+ " where " + FILMS_COLUMN_IS_ALAFFICHE + "=" + "1", null);
+
+        List<Film> listFilm = cursorToFilm(res);
+        return(listFilm);
+    }
+
+    public List<Film> getAllFilmProchainement(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME+ " where " + FILMS_COLUMN_IS_PROCHAINEMENT + "=" + "1", null);
 
         List<Film> listFilm = cursorToFilm(res);
         return(listFilm);
@@ -473,5 +490,33 @@ public class DBHelper extends SQLiteOpenHelper {
             listFilm.add(getFilmById(Integer.parseInt(listFilmId.get(i))));
         }
         return(listFilm);
+    }
+
+    public List<String> getAllNationality(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> listNationality = new ArrayList<String>();
+        Cursor res= db.rawQuery("SELECT DISTINCT " + SEANCES_COLUMN_NATIONALITY + " FROM " + SEANCES_TABLE_NAME, null);
+        res.moveToFirst();
+        while(res.isAfterLast() == false) {
+
+            listNationality.add(res.getString(res.getColumnIndex(SEANCES_COLUMN_NATIONALITY)));
+            res.moveToNext();
+        }
+        Log.d(TAG,listNationality.toString() );
+        return listNationality;
+    }
+
+    public List<String> getAllCategorie(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> listCategorie = new ArrayList<String>();
+        Cursor res= db.rawQuery("SELECT DISTINCT " + FILMS_COLUMN_CATEGORIE + " FROM " + FILMS_TABLE_NAME, null);
+        res.moveToFirst();
+        while(res.isAfterLast() == false) {
+
+            listCategorie.add(res.getString(res.getColumnIndex(FILMS_COLUMN_CATEGORIE)));
+            res.moveToNext();
+        }
+        Log.d(TAG,listCategorie.toString() );
+        return listCategorie;
     }
 }
