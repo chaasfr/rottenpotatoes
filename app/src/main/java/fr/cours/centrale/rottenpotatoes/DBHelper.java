@@ -60,6 +60,7 @@ public class DBHelper extends SQLiteOpenHelper {
     public static final String FILMS_COLUMN_IS_ALAUNE="is_alaune";
     public static final String FILMS_COLUMN_IS_LASTWEEK="is_lastWeek";
     public static final String FILMS_COLUMN_IS_PROCHAINEMENT="is_prochainement";
+    public static final String FILMS_COLUMN_IS_ALAFFICHE="is_alafiche";
 
     public static final String SEANCES_TABLE_NAME="seances";
     public static final String SEANCES_COLUMN_ID="id";
@@ -141,7 +142,8 @@ public class DBHelper extends SQLiteOpenHelper {
                         FILMS_COLUMN_IS_AVP+ " boolean, "+
                         FILMS_COLUMN_IS_ALAUNE+ " boolean, "+
                         FILMS_COLUMN_IS_LASTWEEK+ " boolean, "+
-                        FILMS_COLUMN_IS_PROCHAINEMENT+ " boolean "+
+                        FILMS_COLUMN_IS_PROCHAINEMENT+ " boolean, "+
+                        FILMS_COLUMN_IS_ALAFFICHE + " boolean "+
                         ")"
         );
 
@@ -195,7 +197,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public void insertFilm (int id, String titre, String titre_ori, String affiche, String web, int duree, String distributeur, String participants, String realisateur, String synopsis, int annee,
                             String date_sortie, String info, boolean is_visible, boolean is_vente, int genreid, int categorieid, String genre, String categorie, String ReleaseNumber, String pays, String share_url,
-                            String medias, String videos, boolean is_avp, boolean is_alaune, boolean is_lastWeek, boolean is_prochainement){
+                            String medias, String videos, boolean is_avp, boolean is_alaune, boolean is_lastWeek, boolean is_prochainement, boolean is_alafiche){
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(FILMS_COLUMN_ID, id);
@@ -226,6 +228,7 @@ public class DBHelper extends SQLiteOpenHelper {
         contentValues.put(FILMS_COLUMN_IS_ALAUNE,is_alaune);
         contentValues.put(FILMS_COLUMN_IS_LASTWEEK,is_lastWeek);
         contentValues.put(FILMS_COLUMN_IS_PROCHAINEMENT,is_prochainement);
+        contentValues.put(FILMS_COLUMN_IS_ALAFFICHE,is_alafiche);
         db.insert(FILMS_TABLE_NAME, null, contentValues);
     }
 
@@ -275,6 +278,14 @@ public class DBHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues contentValues = new ContentValues();
         contentValues.put(FILMS_COLUMN_IS_PROCHAINEMENT,true);
+        db.update(FILMS_TABLE_NAME, contentValues,FILMS_COLUMN_ID+"="+id,null);
+
+    }
+
+    public void updateAlaffiche(int id){
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(FILMS_COLUMN_IS_ALAFFICHE,true);
         db.update(FILMS_TABLE_NAME, contentValues,FILMS_COLUMN_ID+"="+id,null);
 
     }

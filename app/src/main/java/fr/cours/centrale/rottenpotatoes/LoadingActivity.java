@@ -106,17 +106,21 @@ public class LoadingActivity extends Activity {
                     urlProchainement, null, new Response.Listener<JSONObject>() {
 
                 @Override
-                public void onResponse(JSONObject response) {
-                    Gson gson = new Gson();
-                    FilmSeanceList listFilmProchainement=gson.fromJson(response.toString(), FilmSeanceList.class);
-                    if(listFilmProchainement != null) {
-                        for (int i = 0; i < listFilmProchainement.getFilmsSeanceList().size(); i++) {
-                            Film film = listFilmProchainement.getFilmsSeanceList().get(i);
-                            addFilmToDB(film, true); //true correspond à is_prochainement
+                public void onResponse(final JSONObject response) {
+                    new Thread(new Runnable() {
+                        public void run() {
+                            Gson gson = new Gson();
+                            FilmSeanceList listFilmProchainement = gson.fromJson(response.toString(), FilmSeanceList.class);
+                            if (listFilmProchainement != null) {
+                                for (int i = 0; i < listFilmProchainement.getFilmsSeanceList().size(); i++) {
+                                    Film film = listFilmProchainement.getFilmsSeanceList().get(i);
+                                    addFilmToDB(film, true, false); //true correspond à is_prochainement
+                                }
+                            }
+                            prochainementsRequestIsDone = true;
+                            if (checkRequestsAreDone()) showMainActivity();
                         }
-                    }
-                    prochainementsRequestIsDone=true;
-                    if(checkRequestsAreDone()) showMainActivity();
+                    }).start();
                 }
             }, new Response.ErrorListener() {
                 @Override
@@ -136,18 +140,21 @@ public class LoadingActivity extends Activity {
                 urlSeances, new Response.Listener<JSONArray>() {
 
             @Override
-            public void onResponse(JSONArray response) {
-                Gson gson = new Gson();
-                JsonParser parser = new JsonParser();
-                JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
-                for(JsonElement obj : jArray )
-                {
-                    Seance seance = gson.fromJson(obj, Seance.class);
-                    addSeanceToDB(seance);
+            public void onResponse(final JSONArray response) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
+                        for (JsonElement obj : jArray) {
+                            Seance seance = gson.fromJson(obj, Seance.class);
+                            addSeanceToDB(seance);
 
-                }
-                seancesRequestIsDone=true;
-                if(checkRequestsAreDone()) showMainActivity();
+                        }
+                        seancesRequestIsDone = true;
+                        if (checkRequestsAreDone()) showMainActivity();
+                    }
+                }).start();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -167,17 +174,20 @@ public class LoadingActivity extends Activity {
                 urlFilmSeances, new Response.Listener<JSONArray>() {
 
             @Override
-            public void onResponse(JSONArray response) {
-                Gson gson = new Gson();
-                JsonParser parser = new JsonParser();
-                JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
-                for(JsonElement obj : jArray )
-                {
-                    Film film = gson.fromJson( obj , Film.class);
-                    addFilmToDB(film, false); // false car le film n'est pas "prochainement"
-                }
-                filmSeancesRequestIsDone=true;
-                if(checkRequestsAreDone()) showMainActivity();
+            public void onResponse(final JSONArray response) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
+                        for (JsonElement obj : jArray) {
+                            Film film = gson.fromJson(obj, Film.class);
+                            addFilmToDB(film, false, true); // false car le film n'est pas "prochainement"
+                        }
+                        filmSeancesRequestIsDone = true;
+                        if (checkRequestsAreDone()) showMainActivity();
+                    }
+                }).start();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -197,24 +207,27 @@ public class LoadingActivity extends Activity {
                 urlEvent, new Response.Listener<JSONArray>() {
 
             @Override
-            public void onResponse(JSONArray response) {
-                Gson gson = new Gson();
-                JsonParser parser = new JsonParser();
-                JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
-                for(JsonElement obj : jArray )
-                {
-                    EventWrapped eventWrapped = gson.fromJson( obj , EventWrapped.class);
-                    if(eventWrapped.getEvents() != null){
-                        for(int i = 0; i< eventWrapped.getEvents().size(); i++)
+            public void onResponse(final JSONArray response) {
+                new Thread(new Runnable() {
+                    public void run() {
+                        Gson gson = new Gson();
+                        JsonParser parser = new JsonParser();
+                        JsonArray jArray = parser.parse(response.toString()).getAsJsonArray();
+                        for(JsonElement obj : jArray )
                         {
-                            Event event= eventWrapped.getEvents().get(i);
-                            addEventToDB(event, eventWrapped.getTitre(),eventWrapped.getType());
+                            EventWrapped eventWrapped = gson.fromJson( obj , EventWrapped.class);
+                            if(eventWrapped.getEvents() != null){
+                                for(int i = 0; i< eventWrapped.getEvents().size(); i++)
+                                {
+                                    Event event= eventWrapped.getEvents().get(i);
+                                    addEventToDB(event, eventWrapped.getTitre(),eventWrapped.getType());
+                                }
+                            }
                         }
+                        eventsRequestIsDone=true;
+                        if(checkRequestsAreDone()) showMainActivity();
                     }
-
-                }
-                eventsRequestIsDone=true;
-                if(checkRequestsAreDone()) showMainActivity();
+                }).start();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -230,7 +243,7 @@ public class LoadingActivity extends Activity {
         AppController.getInstance().addToRequestQueue(jsonArrReq);
     }
 
-    private void addFilmToDB(Film film, boolean is_Prochainement){
+    private void addFilmToDB(Film film, boolean is_Prochainement, boolean is_alafiche){
         Gson gson = new Gson();
         if(!rottenDB.checkIsFilmAlreadyInDb(film.getId())) {
             String media = gson.toJson(film.getMedias());
@@ -238,15 +251,19 @@ public class LoadingActivity extends Activity {
             rottenDB.insertFilm(film.getId(), film.getTitre(), film.getTitre_ori(), film.getAffiche(), film.getWeb(), film.getDuree(), film.getDistributeur(), film.getParticipants(),
                     film.getRealisateur(), film.getSynopsis(), film.getAnnee(), film.getDate_sortie(), film.getInfo(), film.getIs_visible(), film.getIs_vente(), film.getGenreid(),
                     film.getCategorieid(), film.getGenre(), film.getCategorie(), film.getReleaseNumber(), film.getPays(), film.getShare_url(), media, video,
-                    film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), is_Prochainement);
-        } else if (is_Prochainement) rottenDB.updateProchainement(film.getId()); // pour éviter les doublons dans la DB avec entre makeProchainementRequest et makeFilmSeanceRequest.
+                    film.getIs_avp(), film.getIs_alaune(), film.getIs_lastWeek(), is_Prochainement, is_alafiche);
+        } else {
+            if (is_Prochainement) {
+                rottenDB.updateProchainement(film.getId());
+            } else if (is_alafiche) rottenDB.updateAlaffiche(film.getId());
+        }
     }
 
     private void addEventToDB(Event event, String titre_wrapped, String type_wrapped){
         String films= event.getFilmsIdAsString();
         //Rajoute les films qui ne sont que dans des événements à la DB
         for(int i = 0;i<event.getFilms().size();i++){
-            addFilmToDB(event.getFilms().get(i),false);
+            addFilmToDB(event.getFilms().get(i),false,false);
         }
         rottenDB.insertEvent(event.getId(),event.getTitre(),event.getSoustitre(),event.getAffiche(),event.getDescription(),event.getVad_condition(),
                 event.getPartenaire(),event.getDate_deb(),event.getDate_fin(),event.getHeure(),event.getContact(),event.getWeb_label(),event.getEvenementtypeid(),

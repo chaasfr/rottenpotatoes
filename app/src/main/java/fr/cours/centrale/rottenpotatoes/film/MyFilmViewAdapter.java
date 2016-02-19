@@ -19,12 +19,12 @@ import fr.cours.centrale.rottenpotatoes.AppController;
 import fr.cours.centrale.rottenpotatoes.R;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment.OnFilmSelectedListener;
 
-public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecyclerViewAdapter.ViewHolder> {
+public class MyFilmViewAdapter extends RecyclerView.Adapter<MyFilmViewAdapter.ViewHolder> {
 
     private final List<Film> mValues;
     private final OnFilmSelectedListener mListener;
 
-    public MyFilmRecyclerViewAdapter(List<Film> films, OnFilmSelectedListener listener) {
+    public MyFilmViewAdapter(List<Film> films, OnFilmSelectedListener listener) {
         mValues = films;
         mListener = listener;
     }
@@ -69,8 +69,17 @@ public class MyFilmRecyclerViewAdapter extends RecyclerView.Adapter<MyFilmRecycl
         ImageRequest request = new ImageRequest(url,
                 new Response.Listener<Bitmap>() {
                     @Override
-                    public void onResponse(Bitmap bitmap) {
-                        holder.mImageView.setImageBitmap(bitmap);
+                    public void onResponse(final Bitmap bitmap) {
+                        new Thread(new Runnable() {
+                            public void run() {
+                                holder.mImageView.post(new Runnable() {
+                                    public void run() {
+                                        holder.mImageView.setImageBitmap(bitmap);
+                                    }
+                                });
+                            }
+                        }).start();
+
                     }
                 }, 0, 0, null,
                 new Response.ErrorListener() {
