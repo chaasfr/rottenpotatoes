@@ -32,4 +32,19 @@
         <item>Obligatoirement</item>
         <item>Surtout pas</item>
     </string-array>
+
+    <string name ="USER_WANTS_3D">user_choice_troisd</string>
+    <string name ="USER_WANTS_HANDICAPE">user_choice_handicape</string>
+    <string name ="USER_WANTS_MALENTENDANT">user_choice_malentendant</string>
+    <string name ="USER_WANTS_CINEMA1">user_choice_cinema1</string>
+    <string name ="USER_WANTS_CINEMA2">user_choice_cinema2</string>
+    <string name ="USER_WANTS_CINEMA3">user_choice_cinema3</string>
+    <string name ="USER_WANTS_LANGUE1">user_choice_langue1</string>
+    <string name ="USER_WANTS_LANGUE2">user_choice_langue2</string>
+    <string name ="USER_WANTS_LANGUE3">user_choice_langue3</string>
+    <string name ="USER_WANTS_CATEGORIE1">user_choice_categorie1</string>
+    <string name ="USER_WANTS_CATEGORIE2">user_choice_categorie2</string>
+    <string name ="USER_WANTS_CATEGORIE3">user_choice_categorie3</string>
+    <string name ="USER_WANTS_CATEGORIE4">user_choice_categorie4</string>
+
 </resources>
