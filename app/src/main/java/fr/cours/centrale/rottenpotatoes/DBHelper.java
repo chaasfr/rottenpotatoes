@@ -15,7 +15,9 @@ import com.google.gson.JsonParser;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.film.Film;
@@ -404,8 +406,66 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public List<Film> getAllFilmAlAffiche(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME+ " where " + FILMS_COLUMN_IS_ALAFFICHE + "=" + "1", null);
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_IS_ALAFFICHE + "=" + "1", null);
 
+        String request= "select * from " + SEANCES_TABLE_NAME;
+        if(!MainActivity.listCinemaSelected.isEmpty() || !MainActivity.listCategorieSelected.isEmpty() || !MainActivity.listNationalitySelected.isEmpty() || MainActivity.user_choice_handicape !=0 || MainActivity.user_choice_troisd != 0 || MainActivity.user_choice_malentendant != 0) {
+            request += " where ";
+            if (!MainActivity.listCinemaSelected.isEmpty()) {
+                request += "(";
+                for (int i = 1; i <= 3; i++) {
+                    if (MainActivity.listCinemaSelected.contains(i)) {
+                        if (request.substring(request.length() - 1).equals("("))
+                            request += SEANCES_COLUMN_CINEMAID + "=" + String.valueOf(i);
+                        else
+                            request += " OR " + SEANCES_COLUMN_CINEMAID + "=" + String.valueOf(i);
+                    }
+                }
+                request += ")";
+            }
+            if (!MainActivity.listNationalitySelected.isEmpty()) {
+                if (request.substring(request.length() - 1).equals(")"))
+                    request += " AND (";
+                else
+                    request += "(";
+                for (int i = 0; i <= 2; i++) {
+                    if (MainActivity.listNationalitySelected.contains(i)) {
+                        if (request.substring(request.length() - 1).equals("("))
+                            request += SEANCES_COLUMN_NATIONALITY + "=" + "\'" + MainActivity.listNationality.get(i) + "\'";
+                        else
+                            request += " OR " + SEANCES_COLUMN_NATIONALITY + "=" + "\'" + MainActivity.listNationality.get(i) + "\'";
+                    }
+                }
+                request += ")";
+            }
+            if (MainActivity.user_choice_troisd!=0) {
+                if (request.substring(request.length() - 1).equals(")"))
+                    request += " AND (";
+                else
+                    request += "(";
+                request += SEANCES_COLUMN_IS_TROISD + "=" + "\'" + String.valueOf(MainActivity.user_choice_troisd==1)+ "\'";
+                request += ")";
+            }
+            if (MainActivity.user_choice_malentendant!=0) {
+                if (request.substring(request.length() - 1).equals(")"))
+                    request += " AND (";
+                else
+                    request += "(";
+                request += SEANCES_COLUMN_IS_MALENTENDANT + "=" + "\'" + String.valueOf(MainActivity.user_choice_malentendant== 1)+ "\'";
+                request += ")";
+            }
+            if (MainActivity.user_choice_handicape!=0) {
+                if (request.substring(request.length() - 1).equals(")"))
+                    request += " AND (";
+                else
+                    request += "(";
+                request += SEANCES_COLUMN_IS_HANDICAPE+ "=" + "\'" + String.valueOf(MainActivity.user_choice_handicape==1)+ "\'";
+                request += ")";
+            }
+        }
+
+        Log.d(TAG, request);
+        Cursor resSeance = db.rawQuery(request,null);
         List<Film> listFilm = cursorToFilm(res);
         return(listFilm);
     }
@@ -492,29 +552,36 @@ public class DBHelper extends SQLiteOpenHelper {
         return(listFilm);
     }
 
-    public List<String> getAllNationality(){
+
+    // FOR DEBUGGING
+    public Map<Integer,String> getAllNationality(){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<String> listNationality = new ArrayList<String>();
+        Map<Integer,String> listNationality = new HashMap<Integer, String>();
         Cursor res= db.rawQuery("SELECT DISTINCT " + SEANCES_COLUMN_NATIONALITY + " FROM " + SEANCES_TABLE_NAME, null);
         res.moveToFirst();
+        int i =0;
         while(res.isAfterLast() == false) {
 
-            listNationality.add(res.getString(res.getColumnIndex(SEANCES_COLUMN_NATIONALITY)));
+            listNationality.put(i,res.getString(res.getColumnIndex(SEANCES_COLUMN_NATIONALITY)));
             res.moveToNext();
+            i++;
         }
         Log.d(TAG,listNationality.toString() );
         return listNationality;
     }
 
-    public List<String> getAllCategorie(){
+    // FOR DEBUGGING
+    public Map<Integer,String> getAllCategorie(){
         SQLiteDatabase db = this.getReadableDatabase();
-        List<String> listCategorie = new ArrayList<String>();
+        Map<Integer,String> listCategorie = new HashMap<Integer,String>();
         Cursor res= db.rawQuery("SELECT DISTINCT " + FILMS_COLUMN_CATEGORIE + " FROM " + FILMS_TABLE_NAME, null);
         res.moveToFirst();
+        int i =0;
         while(res.isAfterLast() == false) {
 
-            listCategorie.add(res.getString(res.getColumnIndex(FILMS_COLUMN_CATEGORIE)));
+            listCategorie.put(i,res.getString(res.getColumnIndex(FILMS_COLUMN_CATEGORIE)));
             res.moveToNext();
+            i++;
         }
         Log.d(TAG,listCategorie.toString() );
         return listCategorie;

@@ -62,61 +62,61 @@ public class ParametersFragment extends Fragment {
                 if (checked)
                     MainActivity.listCinemaSelected.add(1);
                 else
-                    MainActivity.listCinemaSelected.remove(1);
+                    MainActivity.listCinemaSelected.remove((Object) 1);
                 break;
             case R.id.checkBoxCinema2:
                 if (checked)
                     MainActivity.listCinemaSelected.add(2);
                 else
-                    MainActivity.listCinemaSelected.remove(2);
+                    MainActivity.listCinemaSelected.remove((Object) 2);
                 break;
             case R.id.checkBoxCinema3:
                 if (checked)
                     MainActivity.listCinemaSelected.add(3);
                 else
-                    MainActivity.listCinemaSelected.remove(3);
+                    MainActivity.listCinemaSelected.remove((Object) 3);
+                break;
+            case R.id.checkBoxNationality0:
+                if (checked)
+                    MainActivity.listNationalitySelected.add(0);
+                else
+                    MainActivity.listNationalitySelected.remove((Object) 0);
                 break;
             case R.id.checkBoxNationality1:
                 if (checked)
                     MainActivity.listNationalitySelected.add(1);
                 else
-                    MainActivity.listNationalitySelected.remove(1);
+                    MainActivity.listNationalitySelected.remove((Object) 1);
                 break;
             case R.id.checkBoxNationality2:
                 if (checked)
                     MainActivity.listNationalitySelected.add(2);
                 else
-                    MainActivity.listNationalitySelected.remove(2);
-                break;
-            case R.id.checkBoxNationality3:
-                if (checked)
-                    MainActivity.listNationalitySelected.add(3);
-                else
-                    MainActivity.listNationalitySelected.remove(3);
+                    MainActivity.listNationalitySelected.remove((Object) 2);
                 break;
             case R.id.checkBoxCategorie1:
                 if (checked)
                     MainActivity.listCategorieSelected.add(1);
                 else
-                    MainActivity.listCategorieSelected.remove(1);
+                    MainActivity.listCategorieSelected.remove((Object) 1);
                 break;
             case R.id.checkBoxCategorie2:
                 if (checked)
                     MainActivity.listCategorieSelected.add(2);
                 else
-                    MainActivity.listCategorieSelected.remove(2);
+                    MainActivity.listCategorieSelected.remove((Object) 2);
                 break;
             case R.id.checkBoxCategorie3:
                 if (checked)
                     MainActivity.listCategorieSelected.add(3);
                 else
-                    MainActivity.listCategorieSelected.remove(3);
+                    MainActivity.listCategorieSelected.remove((Object) 3);
                 break;
-            case R.id.checkBoxCategorie4:
+            case R.id.checkBoxCategorie0:
                 if (checked)
-                    MainActivity.listCategorieSelected.add(4);
+                    MainActivity.listCategorieSelected.add(0);
                 else
-                    MainActivity.listCategorieSelected.remove(4);
+                    MainActivity.listCategorieSelected.remove((Object) 0);
                 break;
         }
     }
@@ -145,13 +145,13 @@ public class ParametersFragment extends Fragment {
         final CheckBox checkBoxCinema1 = (CheckBox) view.findViewById(R.id.checkBoxCinema1);
         final CheckBox checkBoxCinema2 = (CheckBox) view.findViewById(R.id.checkBoxCinema2);
         final CheckBox checkBoxCinema3 = (CheckBox) view.findViewById(R.id.checkBoxCinema3);
+        final CheckBox checkBoxLangue0 = (CheckBox) view.findViewById(R.id.checkBoxNationality0);
         final CheckBox checkBoxLangue1 = (CheckBox) view.findViewById(R.id.checkBoxNationality1);
         final CheckBox checkBoxLangue2 = (CheckBox) view.findViewById(R.id.checkBoxNationality2);
-        final CheckBox checkBoxLangue3 = (CheckBox) view.findViewById(R.id.checkBoxNationality3);
+        final CheckBox checkBoxCategorie0 = (CheckBox) view.findViewById(R.id.checkBoxCategorie0);
         final CheckBox checkBoxCategorie1 = (CheckBox) view.findViewById(R.id.checkBoxCategorie1);
         final CheckBox checkBoxCategorie2 = (CheckBox) view.findViewById(R.id.checkBoxCategorie2);
         final CheckBox checkBoxCategorie3 = (CheckBox) view.findViewById(R.id.checkBoxCategorie3);
-        final CheckBox checkBoxCategorie4 = (CheckBox) view.findViewById(R.id.checkBoxCategorie4);
 
         if (!MainActivity.listCinemaSelected.contains(1))
             checkBoxCinema1.setChecked(false);
@@ -186,6 +186,17 @@ public class ParametersFragment extends Fragment {
             }
         });
 
+        if (!MainActivity.listNationalitySelected.contains(0))
+            checkBoxLangue0.setChecked(false);
+        else
+            checkBoxLangue0.setChecked(true);
+        checkBoxLangue0.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
         if (!MainActivity.listNationalitySelected.contains(1))
             checkBoxLangue1.setChecked(false);
         else
@@ -202,17 +213,6 @@ public class ParametersFragment extends Fragment {
         else
             checkBoxLangue2.setChecked(true);
         checkBoxLangue2.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                onCheckboxClicked(v);
-            }
-        });
-
-        if (!MainActivity.listNationalitySelected.contains(3))
-            checkBoxLangue3.setChecked(false);
-        else
-            checkBoxLangue3.setChecked(true);
-        checkBoxLangue3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckboxClicked(v);
@@ -253,10 +253,10 @@ public class ParametersFragment extends Fragment {
         });
 
         if (!MainActivity.listCategorieSelected.contains(4))
-            checkBoxCategorie4.setChecked(false);
+            checkBoxCategorie0.setChecked(false);
         else
-            checkBoxCategorie4.setChecked(true);
-        checkBoxCategorie4.setOnClickListener(new View.OnClickListener() {
+            checkBoxCategorie0.setChecked(true);
+        checkBoxCategorie0.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 onCheckboxClicked(v);

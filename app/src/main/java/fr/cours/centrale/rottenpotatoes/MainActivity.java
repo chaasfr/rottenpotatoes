@@ -19,7 +19,9 @@ import com.google.android.gms.appindexing.AppIndex;
 import com.google.android.gms.common.api.GoogleApiClient;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.event.EventFragment;
@@ -35,11 +37,11 @@ public class MainActivity extends AppCompatActivity
     public static List<Event> listEventToShow;
 
     //PARAMETRES POUR LA RECHERCHE
-    public static List<String> listNationality; // liste toutes les langues de films possibles
+    public static Map<Integer,String> listNationality; // liste toutes les langues de films possibles. {1=VO, 0=VF, 2=VD}
     public static List<Integer> listNationalitySelected; // liste toutes les langues de films choisies par l'utilisateur
-    public static List<String> listCinema;
+    public static Map<Integer,String> listCinema;
     public static List<Integer> listCinemaSelected;
-    public static List<String> listCategorie;
+    public static Map<Integer,String> listCategorie; // {4=Avertissement, 1=Tout public, 2=Jeune public, 3=Interdit moins de 12 ans, 0=--}
     public static List<Integer> listCategorieSelected;
     public static int user_choice_troisd;
     public static int user_choice_malentendant;
@@ -60,6 +62,8 @@ public class MainActivity extends AppCompatActivity
         rottenDB = new DBHelper(this);
 
         loadSharedPref();
+
+        startMap();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -82,6 +86,7 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            showAlAfficheFragment();
         }
     }
 
@@ -169,16 +174,6 @@ public class MainActivity extends AppCompatActivity
     public void showPreferenceFragment() {
         Fragment parametersFragment = new ParametersFragment();
 
-        listCinema = new ArrayList<String>();
-        listCinema.add("Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
-        listCinema.add("Le Renoir");  // cinemaid 2
-        listCinema.add("Le Mazarin"); // cinemaid 3
-
-        listNationality = rottenDB.getAllNationality();
-        listCategorie = rottenDB.getAllCategorie();
-
-        listCinemaSelected.add(2);
-
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
@@ -210,13 +205,13 @@ public class MainActivity extends AppCompatActivity
         editor.putBoolean(getString(R.string.USER_WANTS_CINEMA1), listCinemaSelected.contains(1));
         editor.putBoolean(getString(R.string.USER_WANTS_CINEMA2), listCinemaSelected.contains(2));
         editor.putBoolean(getString(R.string.USER_WANTS_CINEMA3), listCinemaSelected.contains(3));
+        editor.putBoolean(getString(R.string.USER_WANTS_LANGUE0), listNationalitySelected.contains(0));
         editor.putBoolean(getString(R.string.USER_WANTS_LANGUE1), listNationalitySelected.contains(1));
         editor.putBoolean(getString(R.string.USER_WANTS_LANGUE2), listNationalitySelected.contains(2));
-        editor.putBoolean(getString(R.string.USER_WANTS_LANGUE3), listNationalitySelected.contains(3));
+        editor.putBoolean(getString(R.string.USER_WANTS_CATEGORIE0), listCategorieSelected.contains(0));
         editor.putBoolean(getString(R.string.USER_WANTS_CATEGORIE1), listCategorieSelected.contains(1));
         editor.putBoolean(getString(R.string.USER_WANTS_CATEGORIE2), listCategorieSelected.contains(2));
         editor.putBoolean(getString(R.string.USER_WANTS_CATEGORIE3), listCategorieSelected.contains(3));
-        editor.putBoolean(getString(R.string.USER_WANTS_CATEGORIE4), listCategorieSelected.contains(4));
         editor.commit();
     }
 
@@ -234,14 +229,32 @@ public class MainActivity extends AppCompatActivity
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CINEMA1), false)) listCinemaSelected.add(1);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CINEMA2), false)) listCinemaSelected.add(2);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CINEMA3), false)) listCinemaSelected.add(3);
+        if(sharedPref.getBoolean(getString(R.string.USER_WANTS_LANGUE0), false)) listNationalitySelected.add(0);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_LANGUE1), false)) listNationalitySelected.add(1);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_LANGUE2), false)) listNationalitySelected.add(2);
-        if(sharedPref.getBoolean(getString(R.string.USER_WANTS_LANGUE3), false)) listNationalitySelected.add(3);
+        if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CATEGORIE0), false)) listCategorieSelected.add(0);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CATEGORIE1), false)) listCategorieSelected.add(1);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CATEGORIE2), false)) listCategorieSelected.add(2);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CATEGORIE3), false)) listCategorieSelected.add(3);
-        if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CATEGORIE4), false)) listCategorieSelected.add(4);
+    }
 
+    public final void startMap() {
+        listCinema = new HashMap<Integer,String>();
+        listCinema.put(1,"Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
+        listCinema.put(2, "Le Renoir");  // cinemaid 2
+        listCinema.put(3, "Le Mazarin"); // cinemaid 3
+
+        listCategorie = new HashMap<Integer, String>();
+        listCategorie.put(0, "--");
+        listCategorie.put(1,"Tout public");
+        listCategorie.put(2,"Jeune public");
+        listCategorie.put(3,"Interdit moins de 12 ans");
+
+        listNationality= rottenDB.getAllNationality();
+        listNationality = new HashMap<Integer,String>();
+        listNationality.put(0,"VF");
+        listNationality.put(1,"VO");
+        listNationality.put(2,"VD");
     }
 
     @Override
