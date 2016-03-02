@@ -31,14 +31,14 @@ public class MainActivity extends AppCompatActivity
 
     //PARAMETRES POUR LA RECHERCHE
     public static List<String> listNationality; // liste toutes les langues de films possibles
-    public static List<String> listNationalitySelected; // liste toutes les langues de films choisies par l'utilisateur
+    public static List<Integer> listNationalitySelected; // liste toutes les langues de films choisies par l'utilisateur
     public static List<String> listCinema;
-    public static List<String> listCinemaSelected;
+    public static List<Integer> listCinemaSelected;
     public static List<String> listCategorie;
-    public static List<String> listCategorieSelected;
-    public static boolean user_wants_troisd;
-    public static boolean user_wants_malentendant;
-    public static boolean user_wants_handicape;
+    public static List<Integer> listCategorieSelected;
+    public static int user_choice_troisd;
+    public static int user_choice_malentendant;
+    public static int user_choice_handicape;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +48,10 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         rottenDB= new DBHelper(this);
+
+        listCinemaSelected = new ArrayList<Integer>();
+        listNationalitySelected = new ArrayList<Integer>();
+        listCategorieSelected = new ArrayList<Integer>();
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -161,6 +165,8 @@ public class MainActivity extends AppCompatActivity
 
         listNationality = rottenDB.getAllNationality();
         listCategorie = rottenDB.getAllCategorie();
+
+        listCinemaSelected.add(2);
 
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();

@@ -24,13 +24,15 @@
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCinema2"
             android:id="@+id/checkBoxCinema2"
-            android:layout_below="@+id/checkBoxCinema1"/>
+            android:layout_below="@+id/checkBoxCinema1"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCinema3"
             android:id="@+id/checkBoxCinema3"
-            android:layout_below="@+id/checkBoxCinema2"/>
+            android:layout_below="@+id/checkBoxCinema2"
+            android:onClick="onCheckboxClicked"/>
 
 
 
@@ -45,19 +47,22 @@
             android:layout_height="wrap_content"
             android:text="@string/checkBoxNationality1"
             android:id="@+id/checkBoxNationality1"
-            android:layout_below="@+id/nationalityTitle"/>
+            android:layout_below="@+id/nationalityTitle"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxNationality2"
             android:id="@+id/checkBoxNationality2"
-            android:layout_below="@+id/checkBoxNationality1"/>
+            android:layout_below="@+id/checkBoxNationality1"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxNationality3"
             android:id="@+id/checkBoxNationality3"
-            android:layout_below="@+id/checkBoxNationality2"/>
+            android:layout_below="@+id/checkBoxNationality2"
+            android:onClick="onCheckboxClicked"/>
 
         <TextView
             android:id="@+id/categorieTitle"
@@ -70,25 +75,29 @@
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCategorie1"
             android:id="@+id/checkBoxCategorie1"
-            android:layout_below="@+id/categorieTitle" />
+            android:layout_below="@+id/categorieTitle"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCategorie2"
             android:id="@+id/checkBoxCategorie2"
-            android:layout_below="@+id/checkBoxCategorie1" />
+            android:layout_below="@+id/checkBoxCategorie1"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCategorie3"
             android:id="@+id/checkBoxCategorie3"
-            android:layout_below="@+id/checkBoxCategorie2" />
+            android:layout_below="@+id/checkBoxCategorie2"
+            android:onClick="onCheckboxClicked"/>
         <CheckBox
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/checkBoxCategorie4"
             android:id="@+id/checkBoxCategorie4"
-            android:layout_below="@+id/checkBoxCategorie3"/>
+            android:layout_below="@+id/checkBoxCategorie3"
+            android:onClick="onCheckboxClicked"/>
 
         <TextView
             android:id="@+id/troisD"

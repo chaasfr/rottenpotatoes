@@ -7,16 +7,9 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 
 public class ParametersFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
-
-    // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
 
     private OnParametersListener mListener;
 
@@ -24,20 +17,9 @@ public class ParametersFragment extends Fragment {
         // Required empty public constructor
     }
 
-    /**
-     * Use this factory method to create a new instance of
-     * this fragment using the provided parameters.
-     *
-     * @param param1 Parameter 1.
-     * @param param2 Parameter 2.
-     * @return A new instance of fragment ParametersFragment.
-     */
-    // TODO: Rename and change types and number of parameters
-    public static ParametersFragment newInstance(String param1, String param2) {
+    public static ParametersFragment newInstance() {
         ParametersFragment fragment = new ParametersFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
     }
@@ -45,23 +27,90 @@ public class ParametersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-            mParam1 = getArguments().getString(ARG_PARAM1);
-            mParam2 = getArguments().getString(ARG_PARAM2);
-        }
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_parameters, container, false);
+        View view= inflater.inflate(R.layout.fragment_parameters, container, false);
+
+        startCheckboxes(view);
+
+
+        return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(Uri uri) {
-        if (mListener != null) {
-            mListener.onParametersInteraction(uri);
+    public void onCheckboxClicked(View view) {
+        //if (mListener != null) {
+        //    mListener.onParametersInteraction(uri);
+        //}
+        // Is the view now checked?
+        boolean checked = ((CheckBox) view).isChecked();
+
+        // Check which checkbox was clicked
+        switch(view.getId()) {
+            case R.id.checkBoxCinema1:
+                if (checked)
+                    MainActivity.listCinemaSelected.add(1);
+                else
+                    MainActivity.listCinemaSelected.remove(1);
+                break;
+            case R.id.checkBoxCinema2:
+                if (checked)
+                    MainActivity.listCinemaSelected.add(2);
+                else
+                    MainActivity.listCinemaSelected.remove(2);
+                break;
+            case R.id.checkBoxCinema3:
+                if (checked)
+                    MainActivity.listCinemaSelected.add(3);
+                else
+                    MainActivity.listCinemaSelected.remove(3);
+                break;
+            case R.id.checkBoxNationality1:
+                if (checked)
+                    MainActivity.listNationalitySelected.add(1);
+                else
+                    MainActivity.listNationalitySelected.remove(1);
+                break;
+            case R.id.checkBoxNationality2:
+                if (checked)
+                    MainActivity.listNationalitySelected.add(2);
+                else
+                    MainActivity.listNationalitySelected.remove(2);
+                break;
+            case R.id.checkBoxNationality3:
+                if (checked)
+                    MainActivity.listNationalitySelected.add(3);
+                else
+                    MainActivity.listNationalitySelected.remove(3);
+                break;
+            case R.id.checkBoxCategorie1:
+                if (checked)
+                    MainActivity.listCategorieSelected.add(1);
+                else
+                    MainActivity.listCategorieSelected.remove(1);
+                break;
+            case R.id.checkBoxCategorie2:
+                if (checked)
+                    MainActivity.listCategorieSelected.add(2);
+                else
+                    MainActivity.listCategorieSelected.remove(2);
+                break;
+            case R.id.checkBoxCategorie3:
+                if (checked)
+                    MainActivity.listCategorieSelected.add(3);
+                else
+                    MainActivity.listCategorieSelected.remove(3);
+                break;
+            case R.id.checkBoxCategorie4:
+                if (checked)
+                    MainActivity.listCategorieSelected.add(4);
+                else
+                    MainActivity.listCategorieSelected.remove(4);
+                break;
         }
     }
 
@@ -79,10 +128,132 @@ public class ParametersFragment extends Fragment {
     @Override
     public void onDetach() {
         super.onDetach();
-        mListener = null;
     }
 
     public interface OnParametersListener {
         void onParametersInteraction(Uri uri);
+    }
+
+    public void startCheckboxes(View view){
+        final CheckBox checkBoxCinema1 = (CheckBox) view.findViewById(R.id.checkBoxCinema1);
+        final CheckBox checkBoxCinema2 = (CheckBox) view.findViewById(R.id.checkBoxCinema2);
+        final CheckBox checkBoxCinema3 = (CheckBox) view.findViewById(R.id.checkBoxCinema3);
+        final CheckBox checkBoxLangue1 = (CheckBox) view.findViewById(R.id.checkBoxNationality1);
+        final CheckBox checkBoxLangue2 = (CheckBox) view.findViewById(R.id.checkBoxNationality2);
+        final CheckBox checkBoxLangue3 = (CheckBox) view.findViewById(R.id.checkBoxNationality3);
+        final CheckBox checkBoxCategorie1 = (CheckBox) view.findViewById(R.id.checkBoxCategorie1);
+        final CheckBox checkBoxCategorie2 = (CheckBox) view.findViewById(R.id.checkBoxCategorie2);
+        final CheckBox checkBoxCategorie3 = (CheckBox) view.findViewById(R.id.checkBoxCategorie3);
+        final CheckBox checkBoxCategorie4 = (CheckBox) view.findViewById(R.id.checkBoxCategorie4);
+
+        if (!MainActivity.listCinemaSelected.contains(1))
+            checkBoxCinema1.setChecked(false);
+        else
+            checkBoxCinema1.setChecked(true);
+        checkBoxCinema1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCinemaSelected.contains(2))
+            checkBoxCinema2.setChecked(false);
+        else
+            checkBoxCinema2.setChecked(true);
+        checkBoxCinema2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCinemaSelected.contains(3))
+            checkBoxCinema3.setChecked(false);
+        else
+            checkBoxCinema3.setChecked(true);
+        checkBoxCinema3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listNationalitySelected.contains(1))
+            checkBoxLangue1.setChecked(false);
+        else
+            checkBoxLangue1.setChecked(true);
+        checkBoxLangue1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listNationalitySelected.contains(2))
+            checkBoxLangue2.setChecked(false);
+        else
+            checkBoxLangue2.setChecked(true);
+        checkBoxLangue2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listNationalitySelected.contains(3))
+            checkBoxLangue3.setChecked(false);
+        else
+            checkBoxLangue3.setChecked(true);
+        checkBoxLangue3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCategorieSelected.contains(1))
+            checkBoxCategorie1.setChecked(false);
+        else
+            checkBoxCategorie1.setChecked(true);
+        checkBoxCategorie1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCategorieSelected.contains(2))
+            checkBoxCategorie2.setChecked(false);
+        else
+            checkBoxCategorie2.setChecked(true);
+        checkBoxCategorie2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCategorieSelected.contains(3))
+            checkBoxCategorie3.setChecked(false);
+        else
+            checkBoxCategorie3.setChecked(true);
+        checkBoxCategorie3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
+
+        if (!MainActivity.listCategorieSelected.contains(4))
+            checkBoxCategorie4.setChecked(false);
+        else
+            checkBoxCategorie4.setChecked(true);
+        checkBoxCategorie4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onCheckboxClicked(v);
+            }
+        });
     }
 }
