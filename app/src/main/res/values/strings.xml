@@ -28,8 +28,8 @@
     <string name="checkBoxCategorie4">Avertissement</string>
 
     <string-array name="choice_array">
+        <item>Peu importe</item>
         <item>Obligatoirement</item>
         <item>Surtout pas</item>
-        <item>Peu importe</item>
     </string-array>
 </resources>

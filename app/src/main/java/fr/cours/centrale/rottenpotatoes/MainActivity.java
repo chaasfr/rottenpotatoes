@@ -53,6 +53,12 @@ public class MainActivity extends AppCompatActivity
         listNationalitySelected = new ArrayList<Integer>();
         listCategorieSelected = new ArrayList<Integer>();
 
+
+        //TODO: delete
+        user_choice_troisd=0;
+        user_choice_handicape=0;
+        user_choice_malentendant=0;
+
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
             this, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);

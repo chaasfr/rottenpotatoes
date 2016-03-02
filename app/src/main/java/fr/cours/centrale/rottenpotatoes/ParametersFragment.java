@@ -4,13 +4,21 @@ import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
+import android.widget.Spinner;
+
+
+//TODO: spinner handler
 
 public class ParametersFragment extends Fragment {
 
+    private final static String TAG= "FRAGMENT PARAMETERS";
     private OnParametersListener mListener;
 
     public ParametersFragment() {
@@ -27,7 +35,6 @@ public class ParametersFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
     @Override
@@ -37,7 +44,7 @@ public class ParametersFragment extends Fragment {
         View view= inflater.inflate(R.layout.fragment_parameters, container, false);
 
         startCheckboxes(view);
-
+        startSpinners(view);
 
         return view;
     }
@@ -253,6 +260,57 @@ public class ParametersFragment extends Fragment {
             @Override
             public void onClick(View v) {
                 onCheckboxClicked(v);
+            }
+        });
+    }
+
+    public void startSpinners(View view){
+        Spinner troisDSpinner = (Spinner) view.findViewById(R.id.troisD_spinner);
+        Spinner malEntendantSpinner = (Spinner) view.findViewById(R.id.malEntendantSpinner);
+        Spinner handicapeSpinner = (Spinner) view.findViewById(R.id.handicapeSpinner);
+        // Create an ArrayAdapter using the string array and a default spinner layout
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(view.getContext(),
+                R.array.choice_array, android.R.layout.simple_spinner_item);
+        // Specify the layout to use when the list of choices appears
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        // Apply the adapter to the spinner
+        troisDSpinner.setAdapter(adapter);
+        troisDSpinner.setSelection(MainActivity.user_choice_troisd);
+        troisDSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.user_choice_troisd = position;
+                Log.d(TAG, String.valueOf(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        malEntendantSpinner.setAdapter(adapter);
+        malEntendantSpinner.setSelection(MainActivity.user_choice_malentendant);
+        malEntendantSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.user_choice_malentendant = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+            }
+        });
+
+        handicapeSpinner.setAdapter(adapter);
+        handicapeSpinner.setSelection(MainActivity.user_choice_handicape);
+        handicapeSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                MainActivity.user_choice_handicape = position;
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
             }
         });
     }
