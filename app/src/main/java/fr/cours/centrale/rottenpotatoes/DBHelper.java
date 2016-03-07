@@ -485,6 +485,7 @@ public class DBHelper extends SQLiteOpenHelper {
         Cursor resSeance = db.rawQuery(request, null);
         List<Seance> listSeance = cursorToSeance(resSeance);
         List<Integer> listFilmId = new ArrayList<Integer>();
+        Log.d(TAG,"done requesting");
         for(int i=0; i< listSeance.size();i++){
             Seance seance = listSeance.get(i);
             Film filmzor =getFilmById(seance.getFilmid());
@@ -595,6 +596,7 @@ public class DBHelper extends SQLiteOpenHelper {
         return(listFilm);
     }
 
+    //FOR DEBUGGING
     public Map<String, String> getAllTitle(){
         SQLiteDatabase db = this.getReadableDatabase();
         Map<String,String> listTitle= new HashMap<String, String>();
@@ -612,8 +614,6 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return listTitle;
     }
-
-
 
 
     // FOR DEBUGGING

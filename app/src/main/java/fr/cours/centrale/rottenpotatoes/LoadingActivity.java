@@ -74,6 +74,11 @@ public class LoadingActivity extends Activity {
         }
         else showMainActivity();
     }
+    @Override
+    protected void onResume(){
+        super.onResume();
+        showMainActivity();
+    }
 
     public boolean isOnline() {
         ConnectivityManager cm =

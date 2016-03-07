@@ -37,7 +37,6 @@ public class MainActivity extends AppCompatActivity
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
-    private Map<String,String> listFilmTitleFiltered;
     private boolean isFilmFragmentVisible;
     private boolean isEventFragmentVisible;
     private boolean isProchainementFragmentVisible;
@@ -60,10 +59,7 @@ public class MainActivity extends AppCompatActivity
     public static int user_choice_troisd;
     public static int user_choice_malentendant;
     public static int user_choice_handicape;
-    /**
-     * ATTENTION: This was auto-generated to implement the App Indexing API.
-     * See https://g.co/AppIndexing/AndroidStudio for more information.
-     */
+
     private GoogleApiClient client;
 
     @Override
@@ -80,9 +76,6 @@ public class MainActivity extends AppCompatActivity
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
         pDialog.setCancelable(true);
-        showpDialog();
-
-        loadSharedPref();
 
         startMap();
 
@@ -95,20 +88,6 @@ public class MainActivity extends AppCompatActivity
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
 
-        new Thread(new Runnable() {
-            public void run() {
-                listFilmToShow = rottenDB.getAllFilmAlAffiche();
-                listFilmFiltered = rottenDB.getAllFilmAlAffiche();
-                listEventToShow = rottenDB.getAllEvents();
-                listEventFiltered = rottenDB.getAllEvents();
-                listFilmProchainement = rottenDB.getAllFilmProchainement();
-                showAlAfficheFragment();
-                hidepDialog();
-            }
-        }).start();
-
-        // ATTENTION: This was auto-generated to implement the App Indexing API.
-        // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
     }
 
@@ -119,8 +98,6 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
-            listFilmFiltered = rottenDB.getAllFilmAlAffiche();
-            listEventFiltered = rottenDB.getAllEvents();
             showAlAfficheFragment();
         }
     }
@@ -191,7 +168,7 @@ public class MainActivity extends AppCompatActivity
                             if (listFilmProchainement.get(i).getTitre().contains(newText))
                                 listFilmFiltered.add(listFilmProchainement.get(i));
                         }
-                        showAlAfficheFragment();
+                        showProchainementFragment();
                     }
                 }
                 return true;
@@ -225,14 +202,17 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 int id = item.getItemId();
                 if (id == R.id.affiche) {
+                    listFilmFiltered= rottenDB.getAllFilmAlAffiche();
                     showAlAfficheFragment();
                     hidepDialog();
 
                 } else if (id == R.id.prochainement) {
+                    listFilmFiltered = rottenDB.getAllFilmProchainement();
                     showProchainementFragment();
                     hidepDialog();
 
                 } else if (id == R.id.evenements) {
+                    listEventToShow=rottenDB.getAllEvents();
                     showEventFragment();
                     hidepDialog();
 
@@ -381,7 +361,19 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onStart() {
         super.onStart();
+        showpDialog();
         loadSharedPref();
+        new Thread(new Runnable() {
+            public void run() {
+                listFilmToShow = rottenDB.getAllFilmAlAffiche();
+                listFilmFiltered = rottenDB.getAllFilmAlAffiche();
+                listEventToShow = rottenDB.getAllEvents();
+                listEventFiltered = rottenDB.getAllEvents();
+                listFilmProchainement = rottenDB.getAllFilmProchainement();
+                showAlAfficheFragment();
+                hidepDialog();
+            }
+        }).start();
     }
 
     @Override
