@@ -37,7 +37,6 @@ public class LoadingActivity extends Activity {
 
     private static String TAG = LoadingActivity.class.getSimpleName();
 
-    // Progress dialog
     private ProgressDialog pDialog;
 
     private String urlEvent = "http://centrale.corellis.eu/events.json";

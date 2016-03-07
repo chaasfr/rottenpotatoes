@@ -5,7 +5,7 @@
         <item
             android:id="@+id/affiche"
             android:icon="@drawable/ic_menu_camera"
-            android:title="A l'affiche" />
+            android:title="Séances à l'affiche" />
         <item
             android:id="@+id/prochainement"
             android:icon="@drawable/ic_menu_gallery"

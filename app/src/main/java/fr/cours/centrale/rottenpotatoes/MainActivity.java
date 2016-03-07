@@ -1,5 +1,6 @@
 package fr.cours.centrale.rottenpotatoes;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity
     private DBHelper rottenDB;
     public static List<Film> listFilmToShow;
     public static List<Event> listEventToShow;
+    private ProgressDialog pDialog;
 
     //PARAMETRES POUR LA RECHERCHE
     public static Map<Integer,String> listNationality; // liste toutes les langues de films possibles. {1=VO, 0=VF, 2=VD}
@@ -61,6 +63,12 @@ public class MainActivity extends AppCompatActivity
 
         rottenDB = new DBHelper(this);
 
+
+        pDialog = new ProgressDialog(this);
+        pDialog.setMessage("Please wait...");
+        pDialog.setCancelable(true);
+        showpDialog();
+
         loadSharedPref();
 
         startMap();
@@ -73,7 +81,15 @@ public class MainActivity extends AppCompatActivity
 
         NavigationView navigationView = (NavigationView) findViewById(R.id.nav_view);
         navigationView.setNavigationItemSelectedListener(this);
-        showAlAfficheFragment();
+
+        new Thread(new Runnable() {
+            public void run() {
+                listFilmToShow = rottenDB.getAllFilmAlAffiche();
+                showAlAfficheFragment();
+                hidepDialog();
+            }
+        }).start();
+
         // ATTENTION: This was auto-generated to implement the App Indexing API.
         // See https://g.co/AppIndexing/AndroidStudio for more information.
         client = new GoogleApiClient.Builder(this).addApi(AppIndex.API).build();
@@ -114,23 +130,31 @@ public class MainActivity extends AppCompatActivity
 
     @SuppressWarnings("StatementWithEmptyBody")
     @Override
-    public boolean onNavigationItemSelected(MenuItem item) {
+    public boolean onNavigationItemSelected(final MenuItem item) {
         // Handle navigation view item clicks here.
-        int id = item.getItemId();
+        showpDialog();
+        new Thread(new Runnable() {
+            public void run() {
+                int id = item.getItemId();
+                if (id == R.id.affiche) {
+                    showAlAfficheFragment();
+                    hidepDialog();
 
-        if (id == R.id.affiche) {
-            showAlAfficheFragment();
+                } else if (id == R.id.prochainement) {
+                    showProchainementFragment();
+                    hidepDialog();
 
-        } else if (id == R.id.prochainement) {
-            showProchainementFragment();
+                } else if (id == R.id.evenements) {
+                    showEventFragment();
+                    hidepDialog();
 
-        } else if (id == R.id.evenements) {
-            showEventFragment();
+                } else if (id == R.id.preferences) {
+                    showPreferenceFragment();
+                    hidepDialog();
+                }
+            }
+        }).start();
 
-        } else if (id == R.id.preferences) {
-            showPreferenceFragment();
-
-        }
 
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         drawer.closeDrawer(GravityCompat.START);
@@ -224,7 +248,7 @@ public class MainActivity extends AppCompatActivity
         SharedPreferences sharedPref = this.getPreferences(Context.MODE_PRIVATE);
         user_choice_troisd=sharedPref.getInt(getString(R.string.USER_WANTS_3D), defaultValue);
         user_choice_handicape=sharedPref.getInt(getString(R.string.USER_WANTS_HANDICAPE), defaultValue);
-        user_choice_handicape=sharedPref.getInt(getString(R.string.USER_WANTS_MALENTENDANT), defaultValue);
+        user_choice_malentendant=sharedPref.getInt(getString(R.string.USER_WANTS_MALENTENDANT), defaultValue);
 
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CINEMA1), false)) listCinemaSelected.add(1);
         if(sharedPref.getBoolean(getString(R.string.USER_WANTS_CINEMA2), false)) listCinemaSelected.add(2);
@@ -240,21 +264,21 @@ public class MainActivity extends AppCompatActivity
 
     public final void startMap() {
         listCinema = new HashMap<Integer,String>();
-        listCinema.put(1,"Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
+        listCinema.put(1, "Le Cazanne"); // cinemaid 1, imposé car pas d'infos dans les JSON...
         listCinema.put(2, "Le Renoir");  // cinemaid 2
         listCinema.put(3, "Le Mazarin"); // cinemaid 3
 
         listCategorie = new HashMap<Integer, String>();
         listCategorie.put(0, "--");
-        listCategorie.put(1,"Tout public");
-        listCategorie.put(2,"Jeune public");
-        listCategorie.put(3,"Interdit moins de 12 ans");
+        listCategorie.put(1, "Tout public");
+        listCategorie.put(2, "Jeune public");
+        listCategorie.put(3, "Interdit moins de 12 ans");
 
         listNationality= rottenDB.getAllNationality();
         listNationality = new HashMap<Integer,String>();
-        listNationality.put(0,"VF");
-        listNationality.put(1,"VO");
-        listNationality.put(2,"VD");
+        listNationality.put(0, "VF");
+        listNationality.put(1, "VO");
+        listNationality.put(2, "VD");
     }
 
     @Override
@@ -267,5 +291,15 @@ public class MainActivity extends AppCompatActivity
     public void onStop() {
         super.onStop();
         saveSharedPref();
+    }
+
+    private void showpDialog() {
+        if (!pDialog.isShowing())
+            pDialog.show();
+    }
+
+    private void hidepDialog() {
+        if (pDialog.isShowing())
+            pDialog.dismiss();
     }
 }

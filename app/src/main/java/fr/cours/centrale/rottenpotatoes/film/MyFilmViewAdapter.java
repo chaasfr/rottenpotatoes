@@ -93,7 +93,11 @@ public class MyFilmViewAdapter extends RecyclerView.Adapter<MyFilmViewAdapter.Vi
 
     @Override
     public int getItemCount() {
-        return mValues.size();
+        int ItemCount = 0;
+        if (mValues != null) {
+            ItemCount = mValues.size();
+        }
+        return ItemCount;
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder {
