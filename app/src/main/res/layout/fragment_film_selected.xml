@@ -2,12 +2,68 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="fr.cours.centrale.rottenpotatoes.film.FilmSelected">
+    tools:context=".film.FilmSelectedFragment">
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:text="@string/hello_blank_fragment" />
+        android:layout_height="wrap_content">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSTitle"
+            android:text="@string/empty_title" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSDate"
+            android:text="@string/empty_date"
+            android:layout_below="@+id/FSTitle"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSRealisateur"
+            android:text="@string/empty_realisateur"
+            android:layout_below="@+id/FSDate"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSActeurs"
+            android:text="@string/empty_acteur"
+            android:layout_below="@+id/FSRealisateur"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSDescription"
+            android:text="@string/empty_description"
+            android:layout_below="@+id/FSActeurs"/>
+
+
+        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
+            android:id="@+id/grid_view"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:rowCount="1"
+            android:columnWidth="90dp"
+            android:horizontalSpacing="10dp"
+            android:verticalSpacing="10dp"
+            android:gravity="center"
+            android:stretchMode="columnWidth"
+            android:layout_below="@+id/FSDescription">
+        </GridView>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/FSSeanceTitre"
+            android:text="@string/FS_seanceTitre"
+            android:layout_below="@+id/grid_view"/>
+
+
+    </RelativeLayout>
 </FrameLayout>

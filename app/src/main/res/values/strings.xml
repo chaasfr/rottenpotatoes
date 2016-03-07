@@ -47,7 +47,12 @@
     <string name="USER_WANTS_CATEGORIE3">user_choice_categorie3</string>
     <string name="USER_WANTS_CATEGORIE0">user_choice_categorie0</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="empty_title">I don\'t know who I am :(</string>
+    <string name="empty_date">I don\'t know how old I am :(</string>
+    <string name="empty_realisateur"> I lost my daddy :(</string>
+    <string name="empty_acteur"> Where are my stars :(</string>
+    <string name="empty_description"> What am I about :(</string>
+    <string name="FS_seanceTitre"> Seances:</string>
+
 
 </resources>

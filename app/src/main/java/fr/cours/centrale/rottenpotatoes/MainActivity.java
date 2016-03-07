@@ -30,24 +30,26 @@ import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.event.EventFragment;
 import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
+import fr.cours.centrale.rottenpotatoes.film.FilmSelectedFragment;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener,
-        EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener{
+        EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener, FilmSelectedFragment.OnFilmSelectedFragmentInteractionListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
     private boolean isFilmFragmentVisible;
     private boolean isEventFragmentVisible;
     private boolean isProchainementFragmentVisible;
+    private ProgressDialog pDialog;
 
     public static List<Film> listFilmFiltered;
     public static List<Event> listEventFiltered;
     public static List<Film> listFilmToShow;
     public static List<Event> listEventToShow;
     public static List<Film> listFilmProchainement;
-    public static Map<String,String> listAllTitle;
-    private ProgressDialog pDialog;
+    public static Film filmSelected;
+
 
     //PARAMETRES POUR LA RECHERCHE
     public static Map<Integer,String> listNationality; // liste toutes les langues de films possibles. {1=VO, 0=VF, 2=VD}
@@ -70,8 +72,6 @@ public class MainActivity extends AppCompatActivity
         setSupportActionBar(toolbar);
 
         rottenDB = new DBHelper(this);
-
-        listAllTitle = rottenDB.getAllTitle();
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
@@ -98,6 +98,8 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            if (listFilmFiltered.size() != listFilmToShow.size())
+                listFilmFiltered= copyListFilm(listFilmToShow);
             showAlAfficheFragment();
         }
     }
@@ -202,17 +204,20 @@ public class MainActivity extends AppCompatActivity
             public void run() {
                 int id = item.getItemId();
                 if (id == R.id.affiche) {
-                    listFilmFiltered= rottenDB.getAllFilmAlAffiche();
+                    if (listFilmFiltered.size() != listFilmToShow.size())
+                        listFilmFiltered= copyListFilm(listFilmToShow);
                     showAlAfficheFragment();
                     hidepDialog();
 
                 } else if (id == R.id.prochainement) {
-                    listFilmFiltered = rottenDB.getAllFilmProchainement();
+                    if(listFilmFiltered.size() != listFilmProchainement.size())
+                        listFilmFiltered= copyListFilm(listFilmProchainement);
                     showProchainementFragment();
                     hidepDialog();
 
                 } else if (id == R.id.evenements) {
-                    listEventToShow=rottenDB.getAllEvents();
+                    if (listEventFiltered.size()!=listEventToShow.size())
+                        listEventFiltered=rottenDB.getAllEvents();
                     showEventFragment();
                     hidepDialog();
 
@@ -282,9 +287,20 @@ public class MainActivity extends AppCompatActivity
         isProchainementFragmentVisible=false;
     }
 
+    public void showFilmSelectedFragment(){
+        Fragment filmSelectedFragment = new FilmSelectedFragment();
+
+        //Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, filmSelectedFragment)
+                .commit();
+    }
+
     @Override
     public void onFilmSelected(Film film) {
-
+        filmSelected=film;
+        showFilmSelectedFragment();
     }
 
     @Override
@@ -294,6 +310,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onParametersInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void OnFilmSelectedFragmentInteraction(Uri uri) {
 
     }
 
@@ -365,11 +386,11 @@ public class MainActivity extends AppCompatActivity
         loadSharedPref();
         new Thread(new Runnable() {
             public void run() {
-                listFilmToShow = rottenDB.getAllFilmAlAffiche();
-                listFilmFiltered = rottenDB.getAllFilmAlAffiche();
-                listEventToShow = rottenDB.getAllEvents();
+                if(listFilmToShow==null) listFilmToShow = rottenDB.getAllFilmAlAffiche();
+                listFilmFiltered= copyListFilm(listFilmToShow);
+                if(listEventToShow==null)listEventToShow = rottenDB.getAllEvents();
                 listEventFiltered = rottenDB.getAllEvents();
-                listFilmProchainement = rottenDB.getAllFilmProchainement();
+                if(listFilmProchainement==null)listFilmProchainement = rottenDB.getAllFilmProchainement();
                 showAlAfficheFragment();
                 hidepDialog();
             }
@@ -390,5 +411,16 @@ public class MainActivity extends AppCompatActivity
     private void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
+    }
+
+    public List<Film> copyListFilm(List<Film> listToCopy){
+        List<Film> newList = new ArrayList<Film>();
+        if(listToCopy.size() > 0) {
+            for( int i=0; i<listToCopy.size();i++){
+                Film film = listToCopy.get(i);
+                newList.add(film);
+            }
+        }
+        return newList;
     }
 }

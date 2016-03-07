@@ -77,7 +77,7 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        showMainActivity();
+        //showMainActivity();
     }
 
     public boolean isOnline() {
@@ -132,7 +132,6 @@ public class LoadingActivity extends Activity {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
                     Toast.makeText(getApplicationContext(),
                             "failed to retrieve Upcomming Films", Toast.LENGTH_SHORT).show();
-                    showMainActivity();
                 }
             });
             // Adding request to request queue
@@ -166,7 +165,6 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve seances", Toast.LENGTH_SHORT).show();
-                showMainActivity();
             }
         });
         // Adding request to request queue
@@ -199,7 +197,6 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve Films", Toast.LENGTH_SHORT).show();
-                showMainActivity();
             }
         });
         // Adding request to request queue
@@ -239,8 +236,6 @@ public class LoadingActivity extends Activity {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
                 Toast.makeText(getApplicationContext(),
                         "failed to retrieve Events", Toast.LENGTH_SHORT).show();
-                showMainActivity();
-                // hide the progress dialog
             }
         });
         // Adding request to request queue

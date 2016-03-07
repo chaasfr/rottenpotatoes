@@ -324,7 +324,11 @@ public class Film {
         }
 
         public String getPath() {
-            return path;
+            String pathcut = path.substring(10,path.length()-3);
+            pathcut = pathcut.replace("\\u0026","&");
+            pathcut = pathcut.replace("\\u003d","=");
+
+            return pathcut;
         }
 
         public void setPath(String paths) {
