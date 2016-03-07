@@ -252,7 +252,7 @@ public class ParametersFragment extends Fragment {
             }
         });
 
-        if (!MainActivity.listCategorieSelected.contains(4))
+        if (!MainActivity.listCategorieSelected.contains(0))
             checkBoxCategorie0.setChecked(false);
         else
             checkBoxCategorie0.setChecked(true);

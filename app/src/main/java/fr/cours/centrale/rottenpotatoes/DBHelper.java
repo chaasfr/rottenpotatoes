@@ -21,6 +21,7 @@ import java.util.Map;
 
 import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.film.Film;
+import fr.cours.centrale.rottenpotatoes.seance.Seance;
 
 /**
  * Created by christian on 16/02/16.
@@ -111,7 +112,7 @@ public class DBHelper extends SQLiteOpenHelper {
 
     public DBHelper(Context context)
     {
-        super(context, DATABASE_NAME , null, 1);
+        super(context, DATABASE_NAME, null, 1);
     }
 
     @Override
@@ -404,12 +405,19 @@ public class DBHelper extends SQLiteOpenHelper {
         return(listFilm);
     }
 
-    public List<Film> getAllFilmAlAffiche(){
+    public List<Film> getAllFilmProchainement(){
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_IS_ALAFFICHE + "=" + "1", null);
+        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_IS_PROCHAINEMENT + "=" + "1", null);
 
+        List<Film> listFilm = cursorToFilm(res);
+        return(listFilm);
+    }
+
+    public List<Film> getAllFilmAlAffiche(){
+        List<Film> listFilm = new ArrayList<Film>();
+        SQLiteDatabase db = this.getReadableDatabase();
         String request= "select * from " + SEANCES_TABLE_NAME;
-        if(!MainActivity.listCinemaSelected.isEmpty() || !MainActivity.listCategorieSelected.isEmpty() || !MainActivity.listNationalitySelected.isEmpty() || MainActivity.user_choice_handicape !=0 || MainActivity.user_choice_troisd != 0 || MainActivity.user_choice_malentendant != 0) {
+        if(!MainActivity.listCinemaSelected.isEmpty() || !MainActivity.listCategorieSelected.isEmpty() || !MainActivity.listNationalitySelected.isEmpty() || MainActivity.user_choice_handicape !=2 || MainActivity.user_choice_troisd != 2 || MainActivity.user_choice_malentendant != 2) {
             request += " where ";
             if (!MainActivity.listCinemaSelected.isEmpty()) {
                 request += "(";
@@ -438,44 +446,85 @@ public class DBHelper extends SQLiteOpenHelper {
                 }
                 request += ")";
             }
-            if (MainActivity.user_choice_troisd!=0) {
+            if (!MainActivity.listCategorieSelected.isEmpty()) {
                 if (request.substring(request.length() - 1).equals(")"))
                     request += " AND (";
                 else
                     request += "(";
-                request += SEANCES_COLUMN_IS_TROISD + "=" + "\'" + String.valueOf(MainActivity.user_choice_troisd==1)+ "\'";
+                for (int i = 0; i <= 3; i++) {
+                    if (MainActivity.listCategorieSelected.contains(i)) {
+                        if (request.substring(request.length() - 1).equals("("))
+                            request += SEANCES_COLUMN_CATEGORIEID+ "=" + "\'" + i + "\'";
+                        else
+                            request += " OR " + SEANCES_COLUMN_CATEGORIEID + "=" + "\'" + i + "\'";
+                    }
+                }
                 request += ")";
             }
-            if (MainActivity.user_choice_malentendant!=0) {
+            if (MainActivity.user_choice_troisd!=2) {
                 if (request.substring(request.length() - 1).equals(")"))
                     request += " AND (";
                 else
                     request += "(";
-                request += SEANCES_COLUMN_IS_MALENTENDANT + "=" + "\'" + String.valueOf(MainActivity.user_choice_malentendant== 1)+ "\'";
+                request += SEANCES_COLUMN_IS_TROISD + "=" + "\'" + String.valueOf(MainActivity.user_choice_troisd)+ "\'";
                 request += ")";
             }
-            if (MainActivity.user_choice_handicape!=0) {
+            if (MainActivity.user_choice_malentendant!=2) {
                 if (request.substring(request.length() - 1).equals(")"))
                     request += " AND (";
                 else
                     request += "(";
-                request += SEANCES_COLUMN_IS_HANDICAPE+ "=" + "\'" + String.valueOf(MainActivity.user_choice_handicape==1)+ "\'";
+                request += SEANCES_COLUMN_IS_MALENTENDANT + "=" + "\'" + String.valueOf(MainActivity.user_choice_malentendant)+ "\'";
+                request += ")";
+            }
+            if (MainActivity.user_choice_handicape!=2) {
+                if (request.substring(request.length() - 1).equals(")"))
+                    request += " AND (";
+                else
+                    request += "(";
+                request += SEANCES_COLUMN_IS_HANDICAPE+ "=" + "\'" + String.valueOf(MainActivity.user_choice_handicape)+ "\'";
                 request += ")";
             }
         }
 
         Log.d(TAG, request);
-        Cursor resSeance = db.rawQuery(request,null);
-        List<Film> listFilm = cursorToFilm(res);
+        Cursor resSeance = db.rawQuery(request, null);
+        List<Seance> listSeance = cursorToSeance(resSeance);
+        List<Integer> listFilmId = new ArrayList<Integer>();
+        for(int i=0; i< listSeance.size();i++){
+            Seance seance = listSeance.get(i);
+            Film filmzor =getFilmById(seance.getFilmid());
+            if(!listFilmId.contains(seance.getFilmid())){
+                listFilm.add(filmzor);
+                listFilmId.add(seance.getFilmid());
+            }
+        }
         return(listFilm);
     }
 
-    public List<Film> getAllFilmProchainement(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery("select * from " + FILMS_TABLE_NAME+ " where " + FILMS_COLUMN_IS_PROCHAINEMENT + "=" + "1", null);
+    public List<Seance> cursorToSeance(Cursor res){
+        List<Seance> listSeances = new ArrayList<Seance>();
+        res.moveToFirst();
 
-        List<Film> listFilm = cursorToFilm(res);
-        return(listFilm);
+        while(res.isAfterLast() == false) {
+
+            Seance seance = new Seance(res.getInt(res.getColumnIndex(SEANCES_COLUMN_ID)),
+                    res.getString(res.getColumnIndex(SEANCES_COLUMN_ACTUAL_DATE)),
+                    res.getString(res.getColumnIndex(SEANCES_COLUMN_SHOW_TIME)),
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_IS_TROISD))==1,
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_IS_MALENTENDANT))==1,
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_IS_HANDICAPE))==1,
+                    res.getString(res.getColumnIndex(SEANCES_COLUMN_NATIONALITY)),
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_CINEMAID)),
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_FILMID)),
+                    res.getString(res.getColumnIndex(SEANCES_COLUMN_TITRE)),
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_CATEGORIEID)),
+                    res.getInt(res.getColumnIndex(SEANCES_COLUMN_PERFORMANCEID)),
+                    res.getString(res.getColumnIndex(SEANCES_COLUMN_CINEMA_SALLE)));
+            res.moveToNext();
+            listSeances.add(seance);
+        }
+        return listSeances;
     }
 
     public List<Event> cursorToEvent(Cursor res){

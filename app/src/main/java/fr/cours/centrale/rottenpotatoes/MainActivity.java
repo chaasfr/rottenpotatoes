@@ -216,7 +216,7 @@ public class MainActivity extends AppCompatActivity
     }
 
     public final void loadSharedPref(){
-        int defaultValue = 0; // correspond au choix "pas de préférence"
+        int defaultValue = 2; // correspond au choix "pas de préférence"
         listCinemaSelected = new ArrayList<Integer>();
         listNationalitySelected = new ArrayList<Integer>();
         listCategorieSelected = new ArrayList<Integer>();
