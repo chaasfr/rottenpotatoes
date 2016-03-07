@@ -9,9 +9,11 @@ import android.support.design.widget.NavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.view.GravityCompat;
+import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -30,12 +32,22 @@ import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 
 public class MainActivity extends AppCompatActivity
-        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener, EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener {
+        implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener,
+        EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
     private DBHelper rottenDB;
+    private Map<String,String> listFilmTitleFiltered;
+    private boolean isFilmFragmentVisible;
+    private boolean isEventFragmentVisible;
+    private boolean isProchainementFragmentVisible;
+
+    public static List<Film> listFilmFiltered;
+    public static List<Event> listEventFiltered;
     public static List<Film> listFilmToShow;
     public static List<Event> listEventToShow;
+    public static List<Film> listFilmProchainement;
+    public static Map<String,String> listAllTitle;
     private ProgressDialog pDialog;
 
     //PARAMETRES POUR LA RECHERCHE
@@ -63,6 +75,7 @@ public class MainActivity extends AppCompatActivity
 
         rottenDB = new DBHelper(this);
 
+        listAllTitle = rottenDB.getAllTitle();
 
         pDialog = new ProgressDialog(this);
         pDialog.setMessage("Please wait...");
@@ -85,6 +98,10 @@ public class MainActivity extends AppCompatActivity
         new Thread(new Runnable() {
             public void run() {
                 listFilmToShow = rottenDB.getAllFilmAlAffiche();
+                listFilmFiltered = rottenDB.getAllFilmAlAffiche();
+                listEventToShow = rottenDB.getAllEvents();
+                listEventFiltered = rottenDB.getAllEvents();
+                listFilmProchainement = rottenDB.getAllFilmProchainement();
                 showAlAfficheFragment();
                 hidepDialog();
             }
@@ -102,6 +119,8 @@ public class MainActivity extends AppCompatActivity
             drawer.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            listFilmFiltered = rottenDB.getAllFilmAlAffiche();
+            listEventFiltered = rottenDB.getAllEvents();
             showAlAfficheFragment();
         }
     }
@@ -110,6 +129,75 @@ public class MainActivity extends AppCompatActivity
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.main, menu);
+        MenuItem item = menu.findItem(R.id.action_search);
+        item.setIcon(android.R.drawable.ic_menu_search);
+        SearchView sv = new SearchView((this).getSupportActionBar().getThemedContext());
+        MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
+        MenuItemCompat.setActionView(item, sv);
+        sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                if(query != null) {
+                    if (isFilmFragmentVisible && listFilmToShow.size() > 0) {
+                        listFilmFiltered.clear();
+                        for (int i = 0; i < listFilmToShow.size(); i++) {
+                            if (listFilmToShow.get(i).getTitre().contains(query))
+                                listFilmFiltered.add(listFilmToShow.get(i));
+                        }
+                        showAlAfficheFragment();
+                    }
+                    if (isEventFragmentVisible && listEventToShow.size() > 0) {
+                        listEventFiltered.clear();
+                        for (int i = 0; i < listEventToShow.size(); i++) {
+                            if (listEventToShow.get(i).getTitre().contains(query))
+                                listEventFiltered.add(listEventToShow.get(i));
+                        }
+                        showEventFragment();
+                    }
+                    if (isProchainementFragmentVisible && listFilmProchainement.size() > 0) {
+                        listFilmFiltered.clear();
+                        for (int i = 0; i < listFilmProchainement.size(); i++) {
+                            if (listFilmProchainement.get(i).getTitre().contains(query))
+                                listFilmFiltered.add(listFilmProchainement.get(i));
+                        }
+                        showAlAfficheFragment();
+                    }
+                }
+                return true;
+            }
+
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                if(newText != null) {
+                    if (isFilmFragmentVisible && listFilmToShow.size() > 0) {
+                        listFilmFiltered.clear();
+                        for (int i = 0; i < listFilmToShow.size(); i++) {
+                            if (listFilmToShow.get(i).getTitre().contains(newText))
+                                listFilmFiltered.add(listFilmToShow.get(i));
+                        }
+                        showAlAfficheFragment();
+                    }
+                    if (isEventFragmentVisible && listEventToShow.size() > 0) {
+                        listEventFiltered.clear();
+                        for (int i = 0; i < listEventToShow.size(); i++) {
+                            if (listEventToShow.get(i).getTitre().contains(newText))
+                                listEventFiltered.add(listEventToShow.get(i));
+                        }
+                        showEventFragment();
+                    }
+                    if (isProchainementFragmentVisible && listFilmProchainement.size() > 0) {
+                        listFilmFiltered.clear();
+                        for (int i = 0; i < listFilmProchainement.size(); i++) {
+                            if (listFilmProchainement.get(i).getTitre().contains(newText))
+                                listFilmFiltered.add(listFilmProchainement.get(i));
+                        }
+                        showAlAfficheFragment();
+                    }
+                }
+                return true;
+            }
+        });
+
         return true;
     }
 
@@ -165,34 +253,40 @@ public class MainActivity extends AppCompatActivity
     public void showAlAfficheFragment() {
         Fragment filmFragment = new FilmFragment();
 
-        listFilmToShow = rottenDB.getAllFilmAlAffiche();
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, filmFragment)
                 .commit();
+        isFilmFragmentVisible=true;
+        isEventFragmentVisible=false;
+        isProchainementFragmentVisible=false;
     }
 
     public void showProchainementFragment() {
         Fragment filmFragment = new FilmFragment();
 
-        listFilmToShow = rottenDB.getAllFilmProchainement();
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, filmFragment)
                 .commit();
+        isFilmFragmentVisible=false;
+        isEventFragmentVisible=false;
+        isProchainementFragmentVisible=true;
     }
 
     public void showEventFragment() {
         Fragment eventFragment = new EventFragment();
 
-        listEventToShow = rottenDB.getAllEvents();
         // Insert the fragment by replacing any existing fragment
         FragmentManager fragmentManager = getSupportFragmentManager();
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, eventFragment)
                 .commit();
+        isFilmFragmentVisible=false;
+        isEventFragmentVisible=true;
+        isProchainementFragmentVisible=false;
     }
 
     public void showPreferenceFragment() {
@@ -203,6 +297,9 @@ public class MainActivity extends AppCompatActivity
         fragmentManager.beginTransaction()
                 .replace(R.id.content_frame, parametersFragment)
                 .commit();
+        isFilmFragmentVisible=false;
+        isEventFragmentVisible=false;
+        isProchainementFragmentVisible=false;
     }
 
     @Override

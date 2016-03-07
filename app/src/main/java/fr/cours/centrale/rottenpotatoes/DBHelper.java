@@ -294,12 +294,6 @@ public class DBHelper extends SQLiteOpenHelper {
 
     }
 
-    public Cursor getData(int id){
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor res =  db.rawQuery( "select * from contacts where id="+id+"", null );
-        return res;
-    }
-
     public boolean checkIsFilmAlreadyInDb(int id) {
         SQLiteDatabase db = this.getReadableDatabase();
         String Query = "Select * from " + FILMS_TABLE_NAME + " where " + FILMS_COLUMN_ID + " = " + id;
@@ -600,6 +594,26 @@ public class DBHelper extends SQLiteOpenHelper {
         }
         return(listFilm);
     }
+
+    public Map<String, String> getAllTitle(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Map<String,String> listTitle= new HashMap<String, String>();
+        Cursor res= db.rawQuery("SELECT DISTINCT " + FILMS_COLUMN_TITRE + " FROM " + FILMS_TABLE_NAME, null);
+        res.moveToFirst();
+        while(res.isAfterLast() == false) {
+            listTitle.put("film",res.getString(res.getColumnIndex(FILMS_COLUMN_TITRE)));
+            res.moveToNext();
+        }
+        Cursor resEvent= db.rawQuery("SELECT DISTINCT " + EVENTS_COLUMN_TITRE + " FROM " + EVENTS_TABLE_NAME, null);
+        res.moveToFirst();
+        while(res.isAfterLast() == false) {
+            listTitle.put("event",res.getString(res.getColumnIndex(EVENTS_COLUMN_TITRE)));
+            res.moveToNext();
+        }
+        return listTitle;
+    }
+
+
 
 
     // FOR DEBUGGING

@@ -60,8 +60,9 @@ public class FilmFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyFilmViewAdapter(MainActivity.listFilmToShow, mListener));
+            recyclerView.setAdapter(new MyFilmViewAdapter(MainActivity.listFilmFiltered, mListener));
         }
+
         return view;
     }
 

@@ -57,7 +57,7 @@ public class EventFragment extends Fragment {
             } else {
                 recyclerView.setLayoutManager(new GridLayoutManager(context, mColumnCount));
             }
-            recyclerView.setAdapter(new MyEventViewAdapter(MainActivity.listEventToShow, mListener));
+            recyclerView.setAdapter(new MyEventViewAdapter(MainActivity.listEventFiltered, mListener));
         }
         return view;
     }
