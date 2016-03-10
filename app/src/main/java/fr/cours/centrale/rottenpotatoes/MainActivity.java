@@ -118,7 +118,7 @@ public class MainActivity extends AppCompatActivity
         getMenuInflater().inflate(R.menu.main, menu);
         MenuItem item = menu.findItem(R.id.action_search);
         item.setIcon(android.R.drawable.ic_menu_search);
-        SearchView sv = new SearchView((this).getSupportActionBar().getThemedContext());
+        final SearchView sv = new SearchView((this).getSupportActionBar().getThemedContext());
         MenuItemCompat.setShowAsAction(item, MenuItemCompat.SHOW_AS_ACTION_COLLAPSE_ACTION_VIEW | MenuItemCompat.SHOW_AS_ACTION_IF_ROOM);
         MenuItemCompat.setActionView(item, sv);
         sv.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
@@ -148,6 +148,7 @@ public class MainActivity extends AppCompatActivity
                                 listFilmFiltered.add(listFilmProchainement.get(i));
                         }
                         showAlAfficheFragment();
+                        sv.clearFocus();
                     }
                 }
                 return true;
