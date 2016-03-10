@@ -3,8 +3,9 @@ android app rotten potatoes
 
 ###Compile:
 
-'git clone https://github.com/chaasfr/rottenpotatoes.git --recursive'
-
+```
+git clone https://github.com/chaasfr/rottenpotatoes.git --recursive
+```
 You need the --recursive to copy volley
 
 ###Description:
