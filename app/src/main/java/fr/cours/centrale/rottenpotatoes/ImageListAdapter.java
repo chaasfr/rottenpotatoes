@@ -1,44 +1,55 @@
 package fr.cours.centrale.rottenpotatoes;
 
 import android.content.Context;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 
-import java.util.List;
+public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.SimpleViewHolder>{
 
-public class ImageListAdapter extends ArrayAdapter {
     private Context context;
-    private LayoutInflater inflater;
 
-    private List<String> imageUrls;
-
-    public ImageListAdapter(Context context, List<String> imageUrls) {
-        super(context, R.layout.film_image, imageUrls);
-
+    public ImageListAdapter(Context context){
         this.context = context;
-        this.imageUrls = imageUrls;
+    }
 
-        inflater = LayoutInflater.from(context);
+    public static class SimpleViewHolder extends RecyclerView.ViewHolder {
+        public final ImageView imageView;
+
+        public SimpleViewHolder(View view) {
+            super(view);
+            imageView = (ImageView) view.findViewById(R.id.imageView);
+        }
     }
 
     @Override
-    public View getView(int position, View convertView, ViewGroup parent) {
-        if (null == convertView) {
-            convertView = inflater.inflate(R.layout.film_image, parent, false);
-        }
+    public SimpleViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+        final View view = LayoutInflater.from(this.context).inflate(R.layout.film_image, parent, false);
+        return new SimpleViewHolder(view);
+    }
 
-        Glide
-                .with(context)
-                .load(imageUrls.get(position))
-                .into((ImageView) convertView);
-        Log.d("Bleh bleh bleh",imageUrls.get(0));
+    @Override
+    public void onBindViewHolder(SimpleViewHolder holder, final int position) {
+        String url = MainActivity.filmSelected.getMedias().get(position).getPath();
+        Glide.with(context)
+                .load(url)
+                .into(holder.imageView);
+        Log.d("bleh bleh bleh",url);
 
-        return convertView;
+    }
+
+    @Override
+    public long getItemId(int position) {
+        return position;
+    }
+
+    @Override
+    public int getItemCount() {
+        return MainActivity.filmSelected.getMedias().size();
     }
 }

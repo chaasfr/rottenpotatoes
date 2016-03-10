@@ -42,20 +42,15 @@
             android:text="@string/empty_description"
             android:layout_below="@+id/FSActeurs"/>
 
-
-        <GridView xmlns:android="http://schemas.android.com/apk/res/android"
-            android:id="@+id/grid_view"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:rowCount="1"
-            android:columnWidth="90dp"
-            android:horizontalSpacing="10dp"
-            android:verticalSpacing="10dp"
-            android:gravity="center"
-            android:stretchMode="columnWidth"
-            android:layout_below="@+id/FSDescription">
-        </GridView>
-
+            <android.support.v17.leanback.widget.HorizontalGridView
+                android:id="@+id/grid_view"
+                android:layout_width="wrap_content"
+                android:layout_height="200dp"
+                android:horizontalSpacing="10dp"
+                android:verticalSpacing="10dp"
+                android:gravity="center"
+                android:layout_below="@id/FSDescription"
+            />
 
         <TextView
             android:layout_width="wrap_content"

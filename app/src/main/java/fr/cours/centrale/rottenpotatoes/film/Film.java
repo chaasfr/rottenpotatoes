@@ -324,11 +324,13 @@ public class Film {
         }
 
         public String getPath() {
-            String pathcut = path.substring(10,path.length()-3);
-            pathcut = pathcut.replace("\\u0026","&");
-            pathcut = pathcut.replace("\\u003d","=");
-
-            return pathcut;
+            if(path.length() > 4) {
+                String pathcut = path.substring(path.indexOf("http"), path.indexOf("640")+3);
+                pathcut = pathcut.replace("\\u0026", "&");
+                pathcut = pathcut.replace("\\u003d", "=");
+                return pathcut;
+            }
+            else return null;
         }
 
         public void setPath(String paths) {
