@@ -53,6 +53,9 @@
     <string name="empty_acteur"> Where are my stars :(</string>
     <string name="empty_description"> What am I about :(</string>
     <string name="FS_seanceTitre"> Seances:</string>
+    <string name="FS_seanceContent"> Pas de séance cette semaine.</string>
+    <string name="gallerie_photo"> Gallerie Photo:</string>
+    <string name="gallerie_video"> \n Gallerie Video:</string>
 
 
 </resources>

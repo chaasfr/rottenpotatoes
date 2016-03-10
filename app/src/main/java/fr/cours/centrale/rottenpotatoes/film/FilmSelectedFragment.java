@@ -16,6 +16,8 @@ import java.util.List;
 import fr.cours.centrale.rottenpotatoes.ImageListAdapter;
 import fr.cours.centrale.rottenpotatoes.MainActivity;
 import fr.cours.centrale.rottenpotatoes.R;
+import fr.cours.centrale.rottenpotatoes.VideoListAdapter;
+import fr.cours.centrale.rottenpotatoes.seance.Seance;
 
 public class FilmSelectedFragment extends Fragment {
     private final static String TAG= "FRAGMENT PARAMETERS";
@@ -26,12 +28,13 @@ public class FilmSelectedFragment extends Fragment {
     public TextView mRealisateurView;
     public TextView mParticipantsView;
     public TextView mDescriptionView;
+    public TextView mListSeanceView;
     public List<String> listImages;
+    public String seanceContent;
     public FilmSelectedFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static FilmSelectedFragment newInstance(String param1, String param2) {
         FilmSelectedFragment fragment = new FilmSelectedFragment();
         Bundle args = new Bundle();
@@ -56,26 +59,37 @@ public class FilmSelectedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View view= inflater.inflate(R.layout.fragment_film_selected, container, false);
-        HorizontalGridView gridView = (HorizontalGridView) view.findViewById(R.id.grid_view);
+        HorizontalGridView imageGridView = (HorizontalGridView) view.findViewById(R.id.grid_view_image);
+        HorizontalGridView videoGridView = (HorizontalGridView) view.findViewById(R.id.grid_view_video);
 
         mTitreView = (TextView) view.findViewById(R.id.FSTitle);
         mDateView = (TextView) view.findViewById(R.id.FSDate);
         mRealisateurView = (TextView) view.findViewById(R.id.FSRealisateur);
         mParticipantsView = (TextView) view.findViewById(R.id.FSActeurs);
         mDescriptionView = (TextView) view.findViewById(R.id.FSDescription);
+        mListSeanceView = (TextView) view.findViewById(R.id.FSSeanceContent);
 
         mTitreView.setText(MainActivity.filmSelected.getTitre());
-        mDateView.setText(MainActivity.filmSelected.getDate_sortie());
-        mRealisateurView.setText(MainActivity.filmSelected.getRealisateur());
-        mParticipantsView.setText(MainActivity.filmSelected.getParticipants());
-        mDescriptionView.setText(MainActivity.filmSelected.getSynopsis());
+        mDateView.setText("Sortie le : " + MainActivity.filmSelected.getDate_sortie() + "\n");
+        mRealisateurView.setText("Realisateur : " + MainActivity.filmSelected.getRealisateur() + "\n");
+        mParticipantsView.setText("Figurants : " + MainActivity.filmSelected.getParticipants() + "\n");
+        mDescriptionView.setText("Synopsis:\n" + MainActivity.filmSelected.getSynopsis() + "\n");
 
-        gridView.setAdapter(new ImageListAdapter(view.getContext()));
+        if(MainActivity.listSeancesFilmSelected.size() > 0){
+            seanceContent="";
+            for(int i=0; i<MainActivity.listSeancesFilmSelected.size();i++){
+                seanceContent += stringifySeance(MainActivity.listSeancesFilmSelected.get(i)) + "\n";
+            }
+            mListSeanceView.setText(seanceContent);
+        }
+
+
+        imageGridView.setAdapter(new ImageListAdapter(view.getContext()));
+        videoGridView.setAdapter(new VideoListAdapter(view.getContext()));
 
         return view;
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
         if (mListener != null) {
             mListener.OnFilmSelectedFragmentInteraction(uri);
@@ -111,5 +125,11 @@ public class FilmSelectedFragment extends Fragment {
      */
     public interface OnFilmSelectedFragmentInteractionListener {
         void OnFilmSelectedFragmentInteraction(Uri uri);
+    }
+
+    public String stringifySeance(Seance seance){
+        String result="";
+        result+=seance.getActual_date() + " - " + seance.getShow_time() + " - " + seance.getCinema_salle() + " - " + seance.getNationality();
+        return result;
     }
 }

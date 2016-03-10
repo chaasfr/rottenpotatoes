@@ -522,6 +522,13 @@ public class DBHelper extends SQLiteOpenHelper {
         return listSeances;
     }
 
+    public List<Seance> getAllSeances(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor res =  db.rawQuery("select * from " + SEANCES_TABLE_NAME, null);
+        List<Seance> listSeances= cursorToSeance(res);
+        return(listSeances);
+    }
+
     public List<Event> cursorToEvent(Cursor res){
         List<Event> listEvents = new ArrayList<Event>();
         res.moveToFirst();

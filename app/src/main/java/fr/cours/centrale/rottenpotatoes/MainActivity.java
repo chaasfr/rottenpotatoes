@@ -31,6 +31,7 @@ import fr.cours.centrale.rottenpotatoes.event.EventFragment;
 import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 import fr.cours.centrale.rottenpotatoes.film.FilmSelectedFragment;
+import fr.cours.centrale.rottenpotatoes.seance.Seance;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener,
@@ -43,12 +44,14 @@ public class MainActivity extends AppCompatActivity
     private boolean isProchainementFragmentVisible;
     private ProgressDialog pDialog;
 
-    public static List<Film> listFilmFiltered;
-    public static List<Event> listEventFiltered;
-    public static List<Film> listFilmToShow;
-    public static List<Event> listEventToShow;
-    public static List<Film> listFilmProchainement;
-    public static Film filmSelected;
+    public static List<Film> listFilmFiltered; // contient la liste des films à afficher après filtre & recherche
+    public static List<Event> listEventFiltered; // contient la liste des events à afficher après filtrage & recherche
+    public static List<Film> listFilmToShow; // contient la list de tous les films à l'affiche
+    public static List<Event> listEventToShow; // contient la list de tous les events
+    public static List<Film> listFilmProchainement; // contient la liste de tous les films prochainement
+    public static List<Seance> listSeances; // contient toutes les seances de la DB pour accélerer la recherche.
+    public static List<Seance> listSeancesFilmSelected; // contient les seances projettant le film selectionné par l'utilisateur
+    public static Film filmSelected; // film choisi par l'user
 
 
     //PARAMETRES POUR LA RECHERCHE
@@ -300,6 +303,7 @@ public class MainActivity extends AppCompatActivity
     @Override
     public void onFilmSelected(Film film) {
         filmSelected=film;
+        listSeancesFilmSelected = getFilmSeances(filmSelected);
         showFilmSelectedFragment();
     }
 
@@ -391,6 +395,7 @@ public class MainActivity extends AppCompatActivity
                 if(listEventToShow==null)listEventToShow = rottenDB.getAllEvents();
                 listEventFiltered = rottenDB.getAllEvents();
                 if(listFilmProchainement==null)listFilmProchainement = rottenDB.getAllFilmProchainement();
+                if(listSeances == null) listSeances = rottenDB.getAllSeances();
                 showAlAfficheFragment();
                 hidepDialog();
             }
@@ -422,5 +427,13 @@ public class MainActivity extends AppCompatActivity
             }
         }
         return newList;
+    }
+
+    public List<Seance> getFilmSeances(Film film){
+        List<Seance> listSeanceFilm = new ArrayList<Seance>();
+        for(int i=0; i < listSeances.size();i++){
+            if(listSeances.get(i).getFilmid()==film.getId()) listSeanceFilm.add(listSeances.get(i));
+        }
+        return listSeanceFilm;
     }
 }

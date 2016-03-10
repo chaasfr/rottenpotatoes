@@ -2,7 +2,6 @@ package fr.cours.centrale.rottenpotatoes;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -39,8 +38,6 @@ public class ImageListAdapter extends RecyclerView.Adapter<ImageListAdapter.Simp
         Glide.with(context)
                 .load(url)
                 .into(holder.imageView);
-        Log.d("bleh bleh bleh",url);
-
     }
 
     @Override
