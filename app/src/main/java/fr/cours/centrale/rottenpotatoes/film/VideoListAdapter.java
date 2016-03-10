@@ -1,4 +1,4 @@
-package fr.cours.centrale.rottenpotatoes;
+package fr.cours.centrale.rottenpotatoes.film;
 
 import android.content.Context;
 import android.net.Uri;
@@ -9,6 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.MediaController;
 import android.widget.VideoView;
+
+import fr.cours.centrale.rottenpotatoes.MainActivity;
+import fr.cours.centrale.rottenpotatoes.R;
 
 /**
  * Created by christian on 10/03/16.

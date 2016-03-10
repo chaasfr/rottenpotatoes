@@ -15,6 +15,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
@@ -28,6 +29,7 @@ import java.util.Map;
 
 import fr.cours.centrale.rottenpotatoes.event.Event;
 import fr.cours.centrale.rottenpotatoes.event.EventFragment;
+import fr.cours.centrale.rottenpotatoes.event.EventSelectedFragment;
 import fr.cours.centrale.rottenpotatoes.film.Film;
 import fr.cours.centrale.rottenpotatoes.film.FilmFragment;
 import fr.cours.centrale.rottenpotatoes.film.FilmSelectedFragment;
@@ -35,14 +37,16 @@ import fr.cours.centrale.rottenpotatoes.seance.Seance;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener, FilmFragment.OnFilmSelectedListener,
-        EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener, FilmSelectedFragment.OnFilmSelectedFragmentInteractionListener{
+        EventFragment.OnEventSelectedListener, ParametersFragment.OnParametersListener, FilmSelectedFragment.OnFilmSelectedFragmentInteractionListener,
+        EventSelectedFragment.OnEventSelectedFragmentInteractionListener{
 
     private static String TAG = MainActivity.class.getSimpleName();
-    private DBHelper rottenDB;
-    private boolean isFilmFragmentVisible;
-    private boolean isEventFragmentVisible;
-    private boolean isProchainementFragmentVisible;
-    private ProgressDialog pDialog;
+    public static boolean isFilmFragmentVisible;
+    public static boolean isEventFragmentVisible;
+    public static boolean isProchainementFragmentVisible;
+
+    public static DBHelper rottenDB;
+    public static ProgressDialog pDialog;
 
     public static List<Film> listFilmFiltered; // contient la liste des films à afficher après filtre & recherche
     public static List<Event> listEventFiltered; // contient la liste des events à afficher après filtrage & recherche
@@ -52,6 +56,7 @@ public class MainActivity extends AppCompatActivity
     public static List<Seance> listSeances; // contient toutes les seances de la DB pour accélerer la recherche.
     public static List<Seance> listSeancesFilmSelected; // contient les seances projettant le film selectionné par l'utilisateur
     public static Film filmSelected; // film choisi par l'user
+    public static Event eventSelected; // event choisi par l'user
 
 
     //PARAMETRES POUR LA RECHERCHE
@@ -190,11 +195,6 @@ public class MainActivity extends AppCompatActivity
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
-        if (id == R.id.action_settings) {
-            return true;
-        }
-
         return super.onOptionsItemSelected(item);
     }
 
@@ -300,6 +300,16 @@ public class MainActivity extends AppCompatActivity
                 .commit();
     }
 
+    public void showEventSelectedFragment(){
+        Fragment eventSelectedFragment = new EventSelectedFragment();
+
+        //Insert the fragment by replacing any existing fragment
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        fragmentManager.beginTransaction()
+                .replace(R.id.content_frame, eventSelectedFragment)
+                .commit();
+    }
+
     @Override
     public void onFilmSelected(Film film) {
         filmSelected=film;
@@ -309,6 +319,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void onEventSelected(Event event) {
+        Log.d("BLEH BLEH BLEH", event.toString());
+        if(event != null) {
+            eventSelected = event;
+            showEventSelectedFragment();
+        }
 
     }
 
@@ -319,6 +334,11 @@ public class MainActivity extends AppCompatActivity
 
     @Override
     public void OnFilmSelectedFragmentInteraction(Uri uri) {
+
+    }
+
+    @Override
+    public void OnEventSelectedFragmentInteraction(Uri uri) {
 
     }
 
@@ -408,17 +428,17 @@ public class MainActivity extends AppCompatActivity
         saveSharedPref();
     }
 
-    private void showpDialog() {
+    public static void showpDialog() {
         if (!pDialog.isShowing())
             pDialog.show();
     }
 
-    private void hidepDialog() {
+    public static void hidepDialog() {
         if (pDialog.isShowing())
             pDialog.dismiss();
     }
 
-    public List<Film> copyListFilm(List<Film> listToCopy){
+    public static List<Film> copyListFilm(List<Film> listToCopy){
         List<Film> newList = new ArrayList<Film>();
         if(listToCopy.size() > 0) {
             for( int i=0; i<listToCopy.size();i++){
@@ -436,4 +456,5 @@ public class MainActivity extends AppCompatActivity
         }
         return listSeanceFilm;
     }
+
 }

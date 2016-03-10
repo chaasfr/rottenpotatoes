@@ -58,7 +58,7 @@ public class LoadingActivity extends Activity {
         setContentView(R.layout.activity_loading);
 
         pDialog = new ProgressDialog(this);
-        pDialog.setMessage("Please wait...");
+        pDialog.setMessage("Downloading data, please wait. . .");
         pDialog.setCancelable(true);
         showpDialog();
         rottenDB = new DBHelper(this);
@@ -77,7 +77,6 @@ public class LoadingActivity extends Activity {
     @Override
     protected void onResume(){
         super.onResume();
-        //showMainActivity();
     }
 
     public boolean isOnline() {

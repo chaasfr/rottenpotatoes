@@ -10,11 +10,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.Spinner;
 
-
-//TODO: spinner handler
 
 public class ParametersFragment extends Fragment {
 
@@ -45,6 +44,7 @@ public class ParametersFragment extends Fragment {
 
         startCheckboxes(view);
         startSpinners(view);
+        startButton(view);
 
         return view;
     }
@@ -314,5 +314,25 @@ public class ParametersFragment extends Fragment {
             }
         });
     }
+    public void startButton(View view){
+        final Button button = (Button) view.findViewById(R.id.buttonParameter);
+        button.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                MainActivity.showpDialog();
+                new Thread(new Runnable() {
+                    public void run() {
+                        MainActivity.listFilmToShow = MainActivity.rottenDB.getAllFilmAlAffiche();
+                        MainActivity.listFilmFiltered= MainActivity.copyListFilm(MainActivity.listFilmToShow);
+                        MainActivity.listEventToShow = MainActivity.rottenDB.getAllEvents();
+                        MainActivity.listEventFiltered = MainActivity.rottenDB.getAllEvents();
+                        MainActivity.listFilmProchainement = MainActivity.rottenDB.getAllFilmProchainement();
+                        MainActivity.listSeances = MainActivity.rottenDB.getAllSeances();
+                        MainActivity.hidepDialog();
+                    }
+                }).start();
+            }
+        });
+    }
+
 }
 

@@ -13,10 +13,8 @@ import android.widget.TextView;
 import java.util.ArrayList;
 import java.util.List;
 
-import fr.cours.centrale.rottenpotatoes.ImageListAdapter;
 import fr.cours.centrale.rottenpotatoes.MainActivity;
 import fr.cours.centrale.rottenpotatoes.R;
-import fr.cours.centrale.rottenpotatoes.VideoListAdapter;
 import fr.cours.centrale.rottenpotatoes.seance.Seance;
 
 public class FilmSelectedFragment extends Fragment {

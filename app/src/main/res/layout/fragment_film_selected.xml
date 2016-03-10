@@ -60,12 +60,9 @@
             <android.support.v17.leanback.widget.HorizontalGridView
                 android:id="@+id/grid_view_image"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
-                android:horizontalSpacing="10dp"
-                android:verticalSpacing="10dp"
-                android:gravity="center"
+                android:layout_height="100dp"
+                android:horizontalSpacing="1dp"
                 android:layout_below="@id/FSGalleriePhoto"
-                android:scrollbarAlwaysDrawHorizontalTrack="true"
                 android:fadeScrollbars="false"
             />
 
@@ -81,20 +78,26 @@
             <android.support.v17.leanback.widget.HorizontalGridView
                 android:id="@+id/grid_view_video"
                 android:layout_width="wrap_content"
-                android:layout_height="200dp"
+                android:layout_height="1dp"
                 android:horizontalSpacing="10dp"
                 android:verticalSpacing="10dp"
                 android:gravity="center"
                 android:layout_below="@id/FSGallerieVideo"
                 android:scrollbarAlwaysDrawHorizontalTrack="true"
                 />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/FSnovideo"
+                android:text="@string/FSnovideo"
+                android:layout_below="@+id/grid_view_video" />
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/FSSeanceTitre"
                 android:text="@string/FS_seanceTitre"
-                android:layout_below="@+id/grid_view_video"
+                android:layout_below="@+id/FSnovideo"
                 android:textStyle="bold"
                 android:textSize="15dp" />
 

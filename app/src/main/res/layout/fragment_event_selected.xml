@@ -1,0 +1,53 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".film.FilmSelectedFragment">
+
+    <ScrollView
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent">
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ESTitle"
+                android:text="@string/empty_title"
+                android:textStyle="bold"
+                android:textSize="20dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ESDate"
+                android:text="@string/empty_date"
+                android:layout_below="@+id/ESTitle"
+                android:textStyle="italic" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ESRealisateur"
+                android:text="@string/empty_realisateur"
+                android:layout_below="@+id/ESDate" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ESActeurs"
+                android:text="@string/empty_acteur"
+                android:layout_below="@+id/ESRealisateur"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/ESDescription"
+                android:text="@string/empty_description"
+                android:layout_below="@+id/ESActeurs"/>
+
+        </RelativeLayout>
+    </ScrollView>
+</FrameLayout>

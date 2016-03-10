@@ -86,7 +86,7 @@ public class MyEventViewAdapter extends RecyclerView.Adapter<MyEventViewAdapter.
                 }, 0, 0, null,
                 new Response.ErrorListener() {
                     public void onErrorResponse(VolleyError error) {
-                        holder.mImageView.setImageResource(R.drawable.ic_menu_camera); // TODO: add an error image
+                        holder.mImageView.setImageResource(R.drawable.no_image);
                     }
                 });
 // Access the RequestQueue through your singleton class.
